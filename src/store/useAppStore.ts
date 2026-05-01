@@ -754,7 +754,7 @@ const useAppStore = create<StoreState>()(
         const hariHadir = absBulan.filter(a => a.status === 'Hadir').length;
         const alphaCount = absBulan.filter(a => a.status === 'Alpha').length;
 
-        const insentif = alphaCount === 0 ? 200000 : 0;
+        const insentif = alphaCount === 0 ? (state.pengaturan.insentifKehadiran || 200000) : 0;
 
         const uangMakan = k.umMode === 'bulanan'
           ? hariHadir * state.pengaturan.umPerHariHO

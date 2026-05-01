@@ -67,6 +67,7 @@ export default function GajiPage() {
             <thead>
               <tr className="border-b border-gray-200 dark:border-neutral-800">
                 <th className="text-left text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Nama</th>
+                <th className="text-left text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Cabang</th>
                 <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Gaji Pokok</th>
                 <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Tunjangan</th>
                 <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Insentif</th>
@@ -85,7 +86,8 @@ export default function GajiPage() {
                 const g = gajiPeriode.find(x => x.karyawanId === k.id);
                             return (
                   <tr key={k.id} className="border-b border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-900/50">
-                    <td className="py-2 px-2"><p className="text-gray-800 dark:text-neutral-200 text-sm font-medium">{k.nama}</p><p className="text-gray-400 dark:text-neutral-600 text-xs">{k.divisi}</p></td>
+                    <td className="py-2 px-2"><p className="text-gray-800 dark:text-neutral-200 text-sm font-medium">{k.nama}</p></td>
+                    <td className="py-2 px-2"><span className="px-2 py-0.5 rounded-md bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400 text-xs">{k.divisi}</span></td>
                     <td className="py-2 px-2 text-right text-gray-600 dark:text-neutral-400 text-sm">{fRp(g?.gaji || k.gajiPokok)}</td>
                     <td className="py-2 px-2 text-right text-gray-600 dark:text-neutral-400 text-sm">{fRp(g?.tunjangan || k.tunjangan)}</td>
                     <td className="py-2 px-2 text-right text-emerald-500 text-sm">{g?.insentif ? fRp(g.insentif) : '-'}</td>
@@ -108,7 +110,7 @@ export default function GajiPage() {
                 );
               })}
               <tr className="bg-amber-500/5">
-                <td colSpan={9} className="py-3 px-2 text-right text-gray-500 dark:text-neutral-600 text-xs font-medium">TOTAL</td>
+                <td colSpan={10} className="py-3 px-2 text-right text-gray-500 dark:text-neutral-600 text-xs font-medium">TOTAL</td>
                 <td className="py-3 px-2 text-right text-amber-500 text-sm font-bold">{fRp(totalGaji)}</td>
                 <td colSpan={2} />
               </tr>

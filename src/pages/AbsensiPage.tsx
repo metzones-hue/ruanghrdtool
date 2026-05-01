@@ -148,6 +148,14 @@ export default function AbsensiPage() {
       ),
     },
     {
+      key: 'divisi',
+      header: 'Cabang',
+      render: (a: Absensi) => {
+        const k = karyawan.find(x => x.id === a.karyawanId);
+        return <span className="px-2 py-0.5 rounded-md bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400 text-xs">{k?.divisi || '-'}</span>;
+      },
+    },
+    {
       key: 'status',
       header: 'Status',
       render: (a: Absensi) => (
@@ -161,11 +169,9 @@ export default function AbsensiPage() {
     {
       key: 'menitTelat',
       header: 'Telat',
-      render: (a: Absensi) => (
-        <span className={a.menitTelat > 0 ? 'text-red-400' : 'text-gray-400 dark:text-neutral-500'}>
-          {a.menitTelat > 0 ? `${a.menitTelat} mnt` : '-'}
-        </span>
-      ),
+      render: (a: Absensi) => a.menitTelat > 0 ? (
+        <span className="text-red-400 font-medium">{a.menitTelat} mnt</span>
+      ) : null,
     },
   ];
 

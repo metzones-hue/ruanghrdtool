@@ -148,13 +148,17 @@ export default function PengaturanPage() {
         </CardContent>
       </Card>
 
-      {/* Cuti */}
+      {/* Cuti & Insentif */}
       <Card className="bg-white dark:bg-black border-gray-200 dark:border-neutral-800">
-        <CardHeader className="pb-3"><CardTitle className="text-gray-800 dark:text-neutral-200 text-sm">Cuti</CardTitle></CardHeader>
+        <CardHeader className="pb-3"><CardTitle className="text-gray-800 dark:text-neutral-200 text-sm">Cuti & Insentif</CardTitle></CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 items-center gap-4">
             <Label className="text-gray-500 dark:text-neutral-400 text-xs">Cuti Tahunan (hari)</Label>
             <Input type="number" {...f('cutiTahunan')} />
+          </div>
+          <div className="grid grid-cols-2 items-center gap-4">
+            <Label className="text-gray-500 dark:text-neutral-400 text-xs">Insentif Kehadiran (Rp/bulan)</Label>
+            <Input type="number" {...f('insentifKehadiran')} />
           </div>
         </CardContent>
       </Card>

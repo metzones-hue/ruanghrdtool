@@ -162,6 +162,7 @@ export interface Pengaturan {
   cutiTahunan: number;
   batasMalam: string;
   bonusMalam: number;
+  insentifKehadiran: number;
   jamMasukShift1: string;
   jamMasukShift2: string;
   jamKeluarShift1: string;

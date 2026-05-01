@@ -163,10 +163,9 @@ export default function UMPage() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total UM Kotor</p><p className="text-amber-500 text-xl font-bold">{fRp(totalUMKotor)}</p></CardContent></Card>
-        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Pot. Kasbon</p><p className="text-red-400 text-xl font-bold">{fRp(totalPotKB)}</p></CardContent></Card>
-        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Pot. Dadakan</p><p className="text-orange-400 text-xl font-bold">{fRp(totalPotDD)}</p></CardContent></Card>
-        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total UM Bersih + Lembur</p><p className="text-emerald-500 text-xl font-bold">{fRp(grandTotal)}</p></CardContent></Card>
+        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total UM</p><p className="text-amber-500 text-xl font-bold">{fRp(totalUMBersih)}</p></CardContent></Card>
+        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total Lembur</p><p className="text-amber-400 text-xl font-bold">{fRp(totalLembur)}</p></CardContent></Card>
+        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Grand Total</p><p className="text-emerald-500 text-xl font-bold">{fRp(grandTotal)}</p></CardContent></Card>
       </div>
 
       <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
@@ -179,10 +178,7 @@ export default function UMPage() {
                 <th className="text-left text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Cabang</th>
                 <th className="text-center text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Hadir</th>
                 <th className="text-center text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Alpha</th>
-                <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">UM Kotor</th>
-                <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Pot. KB</th>
-                <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Pot. DD</th>
-                <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">UM Bersih</th>
+                <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Total UM</th>
                 <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Lembur</th>
                 <th className="text-right text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Total</th>
                 {umMode === 'minggu' && <><th className="text-center text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Status</th><th className="text-center text-gray-500 dark:text-neutral-600 text-xs font-medium py-2 px-2">Aksi</th></>}
@@ -199,9 +195,6 @@ export default function UMPage() {
                     <td className="py-2 px-2"><span className="px-2 py-0.5 rounded-md bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400 text-xs">{k.divisi}</span></td>
                     <td className="py-2 px-2 text-center text-emerald-500 text-sm font-medium">{data.hadir}</td>
                     <td className="py-2 px-2 text-center text-red-500 text-sm">{data.alpha > 0 ? `${data.alpha} hr` : '-'}</td>
-                    <td className="py-2 px-2 text-right text-gray-800 dark:text-neutral-200 text-sm">{fRp(data.umKotor)}</td>
-                    <td className="py-2 px-2 text-right text-red-400 text-sm">{data.potonganKB > 0 ? `-${fRp(data.potonganKB)}` : '-'}</td>
-                    <td className="py-2 px-2 text-right text-orange-400 text-sm">{data.potonganDD > 0 ? `-${fRp(data.potonganDD)}` : '-'}</td>
                     <td className="py-2 px-2 text-right text-gray-800 dark:text-neutral-200 text-sm font-medium">{fRp(data.umBersih)}</td>
                     <td className="py-2 px-2 text-right text-amber-500 text-sm">{data.lemburPeriode > 0 ? fRp(data.lemburPeriode) : '-'}</td>
                     <td className="py-2 px-2 text-right text-emerald-500 text-sm font-bold">{fRp(data.umBersih + data.lemburPeriode)}</td>
@@ -220,9 +213,6 @@ export default function UMPage() {
               })}
               <tr className="bg-amber-500/5">
                 <td colSpan={5} className="py-3 px-2 text-right text-gray-500 dark:text-neutral-600 text-xs font-medium">TOTAL</td>
-                <td className="py-3 px-2 text-right text-gray-800 dark:text-neutral-200 text-sm font-bold">{fRp(totalUMKotor)}</td>
-                <td className="py-3 px-2 text-right text-red-400 text-sm font-bold">{fRp(totalPotKB)}</td>
-                <td className="py-3 px-2 text-right text-orange-400 text-sm font-bold">{fRp(totalPotDD)}</td>
                 <td className="py-3 px-2 text-right text-gray-800 dark:text-neutral-200 text-sm font-bold">{fRp(totalUMBersih)}</td>
                 <td className="py-3 px-2 text-right text-amber-500 text-sm font-bold">{fRp(totalLembur)}</td>
                 <td className="py-3 px-2 text-right text-emerald-500 text-sm font-bold">{fRp(grandTotal)}</td>
