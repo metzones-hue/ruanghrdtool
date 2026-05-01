@@ -158,7 +158,7 @@ const [selectedIds, setSelectedIds] = useState<number[]>([]);
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Disetujui</p><p className="text-emerald-500 text-xl font-bold">{totalDisetujui}</p></CardContent></Card>
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total Upah</p><p className="text-amber-500 text-xl font-bold">{fRp(totalUpah)}</p></CardContent></Card>
       </div>
-
+      <div className="flex gap-2 items-center">
       <Select value={bulan} onValueChange={setBulan}>
         <SelectTrigger className="w-[220px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
           <SelectValue />
@@ -166,7 +166,7 @@ const [selectedIds, setSelectedIds] = useState<number[]>([]);
         <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
           {getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}
       </SelectContent>
-     </Select>
+      </Select>
 
       <Select value={filterCabang} onValueChange={setFilterCabang}>
   <SelectTrigger className="w-[150px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
@@ -179,6 +179,7 @@ const [selectedIds, setSelectedIds] = useState<number[]>([]);
     ))}
   </SelectContent>
 </Select>
+</div>
 
       {userRole === 'kepala' && selectedIds.length > 0 && (
         <div className="flex gap-2">
