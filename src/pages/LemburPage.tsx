@@ -27,7 +27,18 @@ const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const aktif = karyawan.filter(k => k.status === 'Aktif');
   const filtered = lembur.filter(l => l.tanggal.startsWith(bulan) && (filterCabang === 'all' || l.divisi === filterCabang));
 
-  const toMin = (t: string) => {
+useEffect(() => {
+  const raw = localStorage.getItem('lembur');
+  if (!raw) return;
+  const data = JSON.parse(raw);
+  const fixed = data.map((item: any) => ({
+    ...item,
+    upah: Math.ceil((item.upah || 0) / 100) * 100,
+  }));
+  localStorage.setItem('lembur', JSON.stringify(fixed));
+}, []);
+
+const toMin = (t: string) => {
     const [h, m] = t.split(':').map(Number);
     return h * 60 + m;
   };
