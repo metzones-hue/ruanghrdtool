@@ -1,0 +1,2 @@
+# ruanghrdtool
+HR System RuangPrint
