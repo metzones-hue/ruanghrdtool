@@ -254,6 +254,17 @@ export default function AbsensiPage() {
               <SelectItem key={b.value} value={b.value} className="text-gray-800 dark:text-neutral-200">{b.label}</SelectItem>
             ))}
           </SelectContent>
+       </Select>
+        <Select value={filterCabang} onValueChange={setFilterCabang}>
+          <SelectTrigger className="w-[150px] bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200">
+            <SelectValue placeholder="Semua Cabang" />
+          </SelectTrigger>
+          <SelectContent className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700">
+            <SelectItem value="all" className="text-gray-800 dark:text-neutral-200">Semua Cabang</SelectItem>
+            {[...new Set(karyawan.map(k => k.divisi).filter(Boolean))].map(c => (
+              <SelectItem key={c} value={c} className="text-gray-800 dark:text-neutral-200">{c}</SelectItem>
+            ))}
+          </SelectContent>
         </Select>
       </div>
 
