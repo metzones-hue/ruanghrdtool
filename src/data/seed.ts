@@ -14,7 +14,7 @@ export const defaultPengaturan: Pengaturan = {
   cutiTahunan: 12,
   batasMalam: '22:30',
   bonusMalam: 15000,
-  insentifKehadiran: 200000,
+  insentifKehadiran: 300000,
   jamMasukShift1: '08:30',
   jamMasukShift2: '12:00',
   jamKeluarShift1: '17:30',
