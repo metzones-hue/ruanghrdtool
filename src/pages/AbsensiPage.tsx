@@ -23,10 +23,10 @@ export default function AbsensiPage() {
     karyawanId: '', status: 'Hadir' as 'Hadir' | 'Cuti' | 'Sakit' | 'Izin' | 'Alpha',
     tanggal: todayStr(), masuk: '', keluar: '', keterangan: '',
   });
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [filterCabang, setFilterCabang] = useState('all');
 
   const aktif = karyawan.filter(k => k.status === 'Aktif');
-  const filteredAbsensi = absensi.filter(a => a.tanggal.startsWith(bulan));
+  const filteredAbsensi = absensi.filter(a => a.tanggal.startsWith(bulan) && (filterCabang === 'all' || a.cabang === filterCabang));
   const pg = pengaturan || defaultPengaturan;
 
   const handleSubmit = () => {
