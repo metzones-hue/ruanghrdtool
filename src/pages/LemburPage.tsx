@@ -47,7 +47,7 @@ const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const bonusUM = jamTotal > 8 ? (k.divisi === 'HO' ? pg.umPerHariHO : pg.umPerHari) * 2 : 0;
     let upah = jamTotal * (k.upahLembur || pg.upahLembur);
     if (isMinggu) upah *= 2;
-    Math.ceil((item.upah || 0) / 100) * 100
+    totalUpah = Math.ceil((upah + bonusMalam + bonusUM) / 100) * 100;
 
     addLembur({
       tanggal: form.tanggal,
