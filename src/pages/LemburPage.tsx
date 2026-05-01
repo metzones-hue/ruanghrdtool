@@ -9,7 +9,7 @@ import {
 import { toast } from 'sonner';
 import useAppStore from '@/store/useAppStore';
 import { SortableTable } from '@/components/shared/SortableTable';
-import { fRp, getStatusColor, cn, hitungJam, cekMinggu, cekMingguOrMerah, cekAfter2230, currentBulan, getBulanOptions, todayStr } from '@/lib/utils';
+import { fRp, getStatusColor, cn, hitungJam, cekMingguOrMerah, cekAfter2230, currentBulan, getBulanOptions, todayStr } from '@/lib/utils';
 import { defaultPengaturan } from '@/data/seed';
 import type { Lembur } from '@/types';
 import { Plus, Check, X, Calculator } from 'lucide-react';
