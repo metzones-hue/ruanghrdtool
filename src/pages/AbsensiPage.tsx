@@ -116,7 +116,16 @@ export default function AbsensiPage() {
             status,
             masuk: masuk || undefined,
             keluar: keluar || undefined,
-            menitTelat: 0,
+            menitTelat: (() => {
+  if (status !== 'Hadir' || !masuk) return 0;
+  const jamMasukMin = parseInt(masuk.split(':')[0]) * 60 + parseInt(masuk.split(':')[1]);
+  const jm1 = (pg.jamMasukShift1 || '08:30').split(':').map(Number);
+  const jm2 = (pg.jamMasukShift2 || '12:00').split(':').map(Number);
+  const shiftStartMin = isShift2 ? jm2[0]*60+jm2[1] : jm1[0]*60+jm1[1];
+  const batasMin = isShift2 ? parseInt(pg.batasTelatShift2.toString()) : parseInt(pg.batasTelat.toString());
+  const terlambat = jamMasukMin - shiftStartMin - batasMin;
+  return Math.min(Math.max(terlambat, 0), 40);
+})(),
             shift: isShift2 ? 2 : 1,
             keterangan: keterangan || undefined,
           });
