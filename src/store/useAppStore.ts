@@ -22,7 +22,7 @@ const broadcastSync = (type: string, payload?: unknown) => {
 };
 
 // ==================== LOCAL STORAGE KEY ====================
-const STORAGE_KEY = 'ruanghrd-v6-data';
+const STORAGE_KEY = 'ruanghrd-v7-data';
 
 // ==================== UTILITY FUNCTIONS ====================
 const todayStr = (): string => {
@@ -305,8 +305,11 @@ const useAppStore = create<StoreState>()(
       },
       importAbsensi: (data) => {
         const state = get();
-        const newRecords = data.map((a, i) => ({ ...a, id: nextId(state.absensi) + i }));
-        set({ absensi: [...state.absensi, ...newRecords] });
+        // Hapus data lama yang bulannya sama dengan data import (prevent duplikat)
+        const bulanList = [...new Set(data.map(a => a.tanggal.substring(0, 7)))];
+        const absensiFiltered = state.absensi.filter(a => !bulanList.includes(a.tanggal.substring(0, 7)));
+        const newRecords = data.map((a, i) => ({ ...a, id: nextId(absensiFiltered) + i }));
+        set({ absensi: [...absensiFiltered, ...newRecords] });
         get().addAuditLog({ user: state.userName || 'System', role: state.userRole || 'staff', aksi: 'IMPORT', modul: 'Absensi', detail: `Import ${newRecords.length} data absensi` });
         get().addNotification({ judul: 'Import Selesai', pesan: `${newRecords.length} data absensi berhasil diimport`, type: 'success', modul: 'Absensi' });
       },

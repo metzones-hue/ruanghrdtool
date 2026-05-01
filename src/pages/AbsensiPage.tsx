@@ -51,7 +51,8 @@ export default function AbsensiPage() {
         ? parseInt(pg.batasTelatShift2.toString())
         : parseInt(pg.batasTelat.toString());
       // Compare with shift start + tolerance
-      const shiftStartMin = isShift2 ? 12 * 60 : 8 * 60 + 30;
+      const jm1 = (pg.jamMasukShift1 || '08:30').split(':').map(Number); const jm2 = (pg.jamMasukShift2 || '12:00').split(':').map(Number);
+      const shiftStartMin = isShift2 ? jm2[0]*60+jm2[1] : jm1[0]*60+jm1[1];
       const terlambat = jamMasukMin - shiftStartMin - batasMin;
       if (terlambat > 0) menitTelat = terlambat;
     }

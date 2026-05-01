@@ -9,7 +9,7 @@ import {
 import { toast } from 'sonner';
 import useAppStore from '@/store/useAppStore';
 import { SortableTable } from '@/components/shared/SortableTable';
-import { fRp, getStatusColor, cn, hitungJam, cekMinggu, cekAfter2230, currentBulan, getBulanOptions, todayStr } from '@/lib/utils';
+import { fRp, getStatusColor, cn, hitungJam, cekMinggu, cekMingguOrMerah, cekAfter2230, currentBulan, getBulanOptions, todayStr } from '@/lib/utils';
 import { defaultPengaturan } from '@/data/seed';
 import type { Lembur } from '@/types';
 import { Plus, Check, X, Calculator } from 'lucide-react';
@@ -41,10 +41,10 @@ export default function LemburPage() {
     if (!k) return;
 
     const jamTotal = hitungJam(form.mulai, form.selesai);
-    const isMinggu = cekMinggu(form.tanggal);
+    const isMinggu = cekMingguOrMerah(form.tanggal);
     const melebihi = cekAfter2230(form.selesai);
     const bonusMalam = (melebihi && k.lemburMalamAktif !== 'tidak') ? pg.bonusMalam : 0;
-    const bonusUM = isMinggu && jamTotal > 8 ? pg.umPerHari : 0;
+    const bonusUM = jamTotal > 8 ? (k.divisi === 'HO' ? pg.umPerHariHO : pg.umPerHari) * 2 : 0;
     let upah = jamTotal * (k.upahLembur || pg.upahLembur);
     if (isMinggu) upah *= 2;
     const totalUpah = upah + bonusMalam + bonusUM;
@@ -88,9 +88,10 @@ export default function LemburPage() {
 
       const melebihi = toMin(a.keluar!) >= toMin(pg.batasMalam);
       const bonusMalam = (melebihi && k.lemburMalamAktif !== 'tidak') ? pg.bonusMalam : 0;
-      const bonusUM = cekMinggu(a.tanggal) && jamTotal > 8 ? pg.umPerHari : 0;
+      const isMingguAuto = cekMingguOrMerah(a.tanggal);
+      const bonusUM = jamTotal > 8 ? (k.divisi === 'HO' ? pg.umPerHariHO : pg.umPerHari) * 2 : 0;
       let upah = jamTotal * (k.upahLembur || pg.upahLembur);
-      if (cekMinggu(a.tanggal)) upah *= 2;
+      if (isMingguAuto) upah *= 2;
       const totalUpah = upah + bonusMalam + bonusUM;
 
       const ex = lembur.find(l => l.karyawanId === a.karyawanId && l.tanggal === a.tanggal && l.mulai === jamKeluar);
@@ -99,7 +100,7 @@ export default function LemburPage() {
           tanggal: a.tanggal, karyawanId: k.id, nama: k.nama, divisi: k.divisi,
           mulai: jamKeluar, selesai: a.keluar!, jamTotal,
           upahPerJam: k.upahLembur || pg.upahLembur,
-          isMinggu: cekMinggu(a.tanggal), melebihi2230: melebihi,
+          isMinggu: isMingguAuto, melebihi2230: melebihi,
           bonusMalam, bonusUM, totalUpah,
           alasan: 'Auto-detect dari absensi', status: 'Pending', autoDetect: true,
         });

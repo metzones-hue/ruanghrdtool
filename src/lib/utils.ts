@@ -15,6 +15,23 @@ export const getHari = (tgl: string): string => {
   return hari[new Date(tgl).getDay()];
 };
 
+
+export const LIBUR_NASIONAL_2026: string[] = [
+  '2026-01-01','2026-01-16','2026-02-17','2026-03-19',
+  '2026-03-21','2026-03-22','2026-03-23','2026-03-24','2026-03-25','2026-03-26',
+  '2026-04-03','2026-05-01','2026-05-14','2026-05-27',
+  '2026-06-01','2026-06-16',
+  '2026-08-17','2026-08-25','2026-12-25',
+];
+
+export const cekLiburNasional = (tgl: string): boolean => {
+  return LIBUR_NASIONAL_2026.includes(tgl);
+};
+
+export const cekMingguOrMerah = (tgl: string): boolean => {
+  return new Date(tgl).getDay() === 0 || cekLiburNasional(tgl);
+};
+
 export const cekMinggu = (tgl: string): boolean => {
   return new Date(tgl).getDay() === 0;
 };

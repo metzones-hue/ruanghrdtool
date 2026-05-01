@@ -150,7 +150,8 @@ export interface UMBayar {
 
 export interface Pengaturan {
   upahLembur: number;
-  upahLemburShift2: number;
+  upahLemburLevel2: number;
+  upahLemburLevel3: number;
   umPerHari: number;
   umPerHariHO: number;
   batasTelat: number;
@@ -161,6 +162,8 @@ export interface Pengaturan {
   cutiTahunan: number;
   batasMalam: string;
   bonusMalam: number;
+  jamMasukShift1: string;
+  jamMasukShift2: string;
   jamKeluarShift1: string;
   jamKeluarShift2: string;
   thresholdShift2: string;
