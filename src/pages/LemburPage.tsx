@@ -125,7 +125,7 @@ export default function LemburPage() {
     { key: 'tanggal' as keyof Lembur, label: 'Tanggal', header: 'Tanggal' },
     { key: 'divisi' as keyof Lembur, label: 'Cabang', header: 'Cabang' },
     { key: 'jamTotal' as keyof Lembur, label: 'Jam', header: 'Jam', format: (v: number) => `${v.toFixed(1)} jam` },
-    { key: 'totalUpah' as keyof Lembur, label: 'Upah', header: 'Upah', format: fRp },
+   { key: 'totalUpah' as keyof Lembur, label: 'Upah', header: 'Upah', format: (v: number) => fRp(Math.ceil(v / 100) * 100) },
     {
       key: 'status' as keyof Lembur,
       label: 'Status',
