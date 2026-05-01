@@ -118,6 +118,9 @@ export default function UMPage() {
 
   const isBayar = (kId: number) => umMode === 'minggu' && !!umBayar[`${kId}-${periodeVal}`];
 
+  const totalUMKotor = aktif.reduce((s, k) => s + getUMData(k.id).umKotor, 0);
+  const totalPotKB = aktif.reduce((s, k) => s + getUMData(k.id).potonganKB, 0);
+  const totalPotDD = aktif.reduce((s, k) => s + getUMData(k.id).potonganDD, 0);
   const totalUMBersih = aktif.reduce((s, k) => s + getUMData(k.id).umBersih, 0);
   const totalLembur = aktif.reduce((s, k) => s + getUMData(k.id).lemburPeriode, 0);
   const grandTotal = totalUMBersih + totalLembur;
