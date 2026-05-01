@@ -26,7 +26,12 @@ export default function AbsensiPage() {
   const [filterCabang, setFilterCabang] = useState('all');
 
   const aktif = karyawan.filter(k => k.status === 'Aktif');
-  const filteredAbsensi = absensi.filter(a => a.tanggal.startsWith(bulan) && (filterCabang === 'all' || a.cabang === filterCabang));
+  const filteredAbsensi = absensi.filter(a => {
+  if (!a.tanggal.startsWith(bulan)) return false;
+  if (filterCabang === 'all') return true;
+  const k = karyawan.find(k => k.id === a.karyawanId);
+  return k?.divisi === filterCabang;
+});
   const pg = pengaturan || defaultPengaturan;
 
   const handleSubmit = () => {
