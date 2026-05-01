@@ -24,6 +24,7 @@ export default function AbsensiPage() {
     tanggal: todayStr(), masuk: '', keluar: '', keterangan: '',
   });
   const [filterCabang, setFilterCabang] = useState('all');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const aktif = karyawan.filter(k => k.status === 'Aktif');
   const filteredAbsensi = absensi.filter(a => {
