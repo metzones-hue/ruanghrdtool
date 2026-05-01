@@ -164,7 +164,9 @@ export default function LemburPage() {
         </SelectTrigger>
         <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
           {getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}
-        </SelectContent>
+      </SelectContent>
+     </Select>
+
       <Select value={filterCabang} onValueChange={setFilterCabang}>
   <SelectTrigger className="w-[150px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
     <SelectValue placeholder="Semua Cabang" />
