@@ -23,6 +23,7 @@ export default function LemburPage() {
     karyawanId: '', tanggal: todayStr(), mulai: '', selesai: '', alasan: '',
   });
   const [filterCabang, setFilterCabang] = useState('all');
+const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const aktif = karyawan.filter(k => k.status === 'Aktif');
   const filtered = lembur.filter(l => l.tanggal.startsWith(bulan) && (filterCabang === 'all' || l.divisi === filterCabang));
 
