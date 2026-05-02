@@ -23,6 +23,7 @@ export const defaultPengaturan: Pengaturan = {
   lokasiHO: ['HO'],
   password: 'aHJkMTIz',
   passwordKepala: 'a2VwYWxhNDU2',
+  umBulananHO: 960000,
 };
 
 const baseCabang: { kode: string; nama: string }[] = [
