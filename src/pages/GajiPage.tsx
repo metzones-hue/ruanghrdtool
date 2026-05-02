@@ -16,7 +16,7 @@ export default function GajiPage() {
   const [slipKaryawan, setSlipKaryawan] = useState<{ k: Karyawan; calc: ReturnType<typeof hitungGajiKaryawan> } | null>(null);
   const slipRef = useRef<HTMLDivElement>(null);
 
-  const aktif = karyawan.filter(k => k.status === 'Aktif');
+  const [filterCabang, setFilterCabang] = useState('Semua');
   const gajiPeriode = gaji.filter(g => g.periode === periode);
 
   const handlePrintSlip = useReactToPrint({ contentRef: slipRef, documentTitle: 'Slip Gaji' });
