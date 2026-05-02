@@ -44,6 +44,19 @@ export default function GajiPage() {
         <Button variant="outline" onClick={calculateGaji} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800">
           <Calculator className="w-4 h-4 mr-1" /> Hitung Semua
         </Button>
+        <Button
+  size="sm"
+  onClick={() => {
+    aktif.forEach(k => {
+      const g = gajiPeriode.find(x => x.karyawanId === k.id);
+      if (g && g.status === 'Belum Dibayar') tandaiGajiBayar(k.id, periode);
+    });
+    toast.success('Semua gaji ditandai dibayar');
+  }}
+  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
+>
+  <Check className="w-4 h-4 mr-1" /> Bayar Semua
+</Button>
       </div>
 
       <Select value={periode} onValueChange={setPeriode}>
