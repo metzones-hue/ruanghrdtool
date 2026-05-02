@@ -166,13 +166,13 @@ const toMin = (t: string) => {
           </Button>
           <Button
   size="sm"
-  onClick={() => {
-    const pendingIds = filtered
-      .filter(l => l.status === 'Pending')
-      .map(l => l.id);
-    setSelectedIds(pendingIds);
-    bulkApprove('Disetujui');
-  }}
+ onClick={() => {
+  const pendingIds = filtered
+    .filter(l => l.status === 'Pending')
+    .map(l => l.id);
+  pendingIds.forEach(id => approveLembur(id, 'Disetujui'));
+  toast.success(`${pendingIds.length} lembur disetujui`);
+}}
   className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
 >
   <Check className="w-4 h-4 mr-1" /> Approve Semua
