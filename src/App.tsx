@@ -47,7 +47,7 @@ function ProtectedRoute({ children, requiredRole }: { children: React.ReactNode;
             <NotificationCenter />
           </div>
         </div>
-        <div className="px-4 lg:px-6 pb-6 max-w-[1400px] mx-auto -mt-4">
+        <div className="px-4 lg:px-6 pb-6 max-w-[1400px] mx-auto">
           {children}
         </div>
       </main>
