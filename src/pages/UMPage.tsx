@@ -53,6 +53,7 @@ export default function UMPage() {
     : new Date(`${periodeBulan}-01`).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
 
   const getUMData = (kId: number): UMResult => {
+  const pg = pengaturan || defaultPengaturan;
     const k = karyawan.find(x => x.id === kId);
     if (!k) return { hadir: 0, alpha: 0, umRate: 40000, umKotor: 0, potonganKB: 0, potonganDD: 0, umBersih: 0, lemburPeriode: 0, lemburCount: 0, detailRows: [] };
 
