@@ -90,7 +90,7 @@ export default function UMPage() {
       const hadir = abs.filter(a => a.status === 'Hadir').length;
       const alpha = abs.filter(a => a.status === 'Alpha').length;
 
-      let umKotor = k.divisi === 'HO' ? Math.max(0, 960000 - (alpha * 40000)) : hadir * umRate;
+      let umKotor = k.divisi === 'HO' ? Math.max(0, (pg.umBulananHO || 960000) - (alpha * pg.umPerHariHO)) : hadir * umRate;
       if (k.punyaCuti === 'ya' && alpha > 0) umKotor = 0;
 
       const firstDay = `${periodeBulan}-01`;
