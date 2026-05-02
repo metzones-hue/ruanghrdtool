@@ -43,7 +43,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/logo.png" alt="RuangHRD" className="w-16 h-16 mx-auto rounded-2xl" />          <h1 className="text-2xl font-bold text-amber-400">RuangHRD</h1>
+          <img src="/logo.png" alt="RuangHRD" className="w-24 h-24 mx-auto object-contain" />          <h1 className="text-2xl font-bold text-amber-400">RuangHRD</h1>
           <p className="text-gray-500 dark:text-neutral-400 text-sm mt-1">Sistem HR Digital — RuangPrint</p>
         </div>
         <Card className="bg-white dark:bg-black border-gray-200 dark:border-neutral-800">
