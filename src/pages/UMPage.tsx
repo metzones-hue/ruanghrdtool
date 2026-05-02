@@ -139,6 +139,18 @@ export default function UMPage() {
           <Button variant={umMode === 'minggu' ? 'default' : 'outline'} onClick={() => setUMMode('minggu')} className={umMode === 'minggu' ? 'bg-amber-500 text-black' : 'bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300'}>Mingguan</Button>
           <Button variant={umMode === 'bulan' ? 'default' : 'outline'} onClick={() => setUMMode('bulan')} className={umMode === 'bulan' ? 'bg-amber-500 text-black' : 'bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300'}>Bulanan</Button>
         </div>
+        <Button
+  size="sm"
+  onClick={() => {
+    aktif.forEach(k => {
+      if (!isBayar(k.id)) tandaiUMBayar(k.id, periodeVal);
+    });
+    toast.success('Semua uang makan ditandai dibayar');
+  }}
+  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
+>
+  <Check className="w-4 h-4 mr-1" /> Bayar Semua
+</Button>
       </div>
 
       <div className="flex flex-wrap gap-2">
