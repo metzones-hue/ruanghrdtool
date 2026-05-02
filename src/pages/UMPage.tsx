@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import useAppStore from '@/store/useAppStore';
 import { fRp, cn, getKamisList, getPeriodeUM, currentBulan, getBulanOptions, getHari } from '@/lib/utils';
-import { getCabangKodeList } from '@/data/seed';
+import { getCabangKodeList, defaultPengaturan } from '@/data/seed';
 import { Check, RotateCcw, Printer } from 'lucide-react';
 import { useReactToPrint } from 'react-to-print';
 import { SlipUM } from '@/components/shared/SlipUM';
