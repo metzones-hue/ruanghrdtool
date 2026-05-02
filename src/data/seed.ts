@@ -5,7 +5,7 @@ export const defaultPengaturan: Pengaturan = {
   upahLemburLevel2: 6000,
   upahLemburLevel3: 7000,
   umPerHari: 40000,
-  umPerHariHO: 45000,
+  umPerHariHO: 40000,
   batasTelat: 15,
   batasTelatShift2: 15,
   potonganTelat: 1000,
