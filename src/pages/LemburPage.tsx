@@ -29,7 +29,7 @@ const [selectedIds, setSelectedIds] = useState<number[]>([]);
   .filter(l => l.tanggal.startsWith(bulan) && (filterCabang === 'all' || l.divisi === filterCabang))
   .map(l => ({
     ...l,
-    upah: Math.ceil((l.upah || 0) / 100) * 100,
+  upah: Math.ceil((l.totalupah || 0) / 100) * 100,
   }));
 useEffect(() => {
   const raw = localStorage.getItem('lembur');
