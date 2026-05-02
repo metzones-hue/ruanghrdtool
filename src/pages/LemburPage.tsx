@@ -25,8 +25,12 @@ export default function LemburPage() {
   const [filterCabang, setFilterCabang] = useState('all');
 const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const aktif = karyawan.filter(k => k.status === 'Aktif');
-  const filtered = lembur.filter(l => l.tanggal.startsWith(bulan) && (filterCabang === 'all' || l.divisi === filterCabang));
-
+  const filtered = lembur
+  .filter(l => l.tanggal.startsWith(bulan) && (filterCabang === 'all' || l.divisi === filterCabang))
+  .map(l => ({
+    ...l,
+    upah: Math.ceil((l.upah || 0) / 100) * 100,
+  }));
 useEffect(() => {
   const raw = localStorage.getItem('lembur');
   if (!raw) return;
