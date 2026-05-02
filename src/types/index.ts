@@ -154,6 +154,7 @@ export interface Pengaturan {
   upahLemburLevel3: number;
   umPerHari: number;
   umPerHariHO: number;
+  umBulananHO: number;
   batasTelat: number;
   batasTelatShift2: number;
   potonganTelat: number;
