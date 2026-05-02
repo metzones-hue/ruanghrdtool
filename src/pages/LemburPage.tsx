@@ -164,6 +164,19 @@ const toMin = (t: string) => {
           <Button onClick={() => setOpenForm(true)} className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">
             <Plus className="w-4 h-4 mr-1" /> Input Lembur
           </Button>
+          <Button
+  size="sm"
+  onClick={() => {
+    const pendingIds = filtered
+      .filter(l => l.status === 'Pending')
+      .map(l => l.id);
+    setSelectedIds(pendingIds);
+    bulkApprove('Disetujui');
+  }}
+  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
+>
+  <Check className="w-4 h-4 mr-1" /> Approve Semua
+</Button>
         </div>
       </div>
 
