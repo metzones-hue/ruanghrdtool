@@ -37,44 +37,35 @@ export default function GajiPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Penggajian</h1>
-          <p className="text-gray-500 dark:text-neutral-400 text-sm">{aktif.length} karyawan aktif</p>
-        </div>
-        <Button variant="outline" onClick={calculateGaji} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800">
-          <Calculator className="w-4 h-4 mr-1" /> Hitung Semua
-        </Button>
-        <Button
-  size="sm"
-  onClick={() => {
-    aktif.forEach(k => {
-      const g = gajiPeriode.find(x => x.karyawanId === k.id);
-      if (g && g.status === 'Belum Dibayar') tandaiGajiBayar(k.id, periode);
-    });
-    toast.success('Semua gaji ditandai dibayar');
-  }}
-  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
->
-  <Check className="w-4 h-4 mr-1" /> Bayar Semua
-</Button>
-      </div>
-
-      <Select value={periode} onValueChange={setPeriode}>
-        <SelectTrigger className="w-[200px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
-          {getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}
-        </SelectContent>
-      </Select>
-      <Select value={filterCabang} onValueChange={setFilterCabang}>
-  <SelectTrigger className="w-[180px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
-    <SelectValue />
-  </SelectTrigger>
-  <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
-    {cabangList.map(c => <SelectItem key={c} value={c}>{c === 'Semua' ? 'Semua Cabang' : c}</SelectItem>)}
-  </SelectContent>
-</Select>
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Penggajian</h1>
+    <p className="text-gray-500 dark:text-neutral-400 text-sm">{aktif.length} karyawan aktif</p>
+  </div>
+  <div className="flex flex-wrap items-center gap-2">
+    <Select value={periode} onValueChange={setPeriode}>
+      <SelectTrigger className="w-[160px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
+        {getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}
+      </SelectContent>
+    </Select>
+    <Select value={filterCabang} onValueChange={setFilterCabang}>
+      <SelectTrigger className="w-[160px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
+        {cabangList.map(c => <SelectItem key={c} value={c}>{c === 'Semua' ? 'Semua Cabang' : c}</SelectItem>)}
+      </SelectContent>
+    </Select>
+    <Button variant="outline" onClick={calculateGaji} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300">
+      <Calculator className="w-4 h-4 mr-1" /> Hitung Semua
+    </Button>
+    <Button size="sm" onClick={() => { aktif.forEach(k => { const g = gajiPeriode.find(x => x.karyawanId === k.id); if (g && g.status === 'Belum Dibayar') tandaiGajiBayar(k.id, periode); }); toast.success('Semua gaji ditandai dibayar'); }} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+      <Check className="w-4 h-4 mr-1" /> Bayar Semua
+    </Button>
+  </div>
+</div>
 
       <div className="grid grid-cols-3 gap-3">
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total Gaji</p><p className="text-amber-500 text-xl font-bold">{fRp(totalGaji)}</p></CardContent></Card>
