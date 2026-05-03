@@ -137,6 +137,7 @@ export default function UMPage() {
     <p className="text-gray-500 dark:text-neutral-400 text-sm">{periodeLabel}</p>
   </div>
   <div className="flex flex-wrap items-center gap-3">
+    <>
   {umMode === 'minggu' ? (
     <Select value={periodeMinggu} onValueChange={setPeriodeMinggu}>
       <SelectTrigger className="w-[220px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
@@ -155,6 +156,7 @@ export default function UMPage() {
       <SelectItem value="all" className="text-gray-900 dark:text-neutral-200">Semua</SelectItem>
       {getCabangKodeList().map(c => <SelectItem key={c} value={c} className="text-gray-900 dark:text-neutral-200">{c}</SelectItem>)}
     </SelectContent>
+      </>
   </Select>
   <div className="flex gap-2">
     <Button variant={umMode === 'minggu' ? 'default' : 'outline'} onClick={() => setUMMode('minggu')} className={umMode === 'minggu' ? 'bg-amber-500 text-black hover:bg-amber-600' : ''}>Mingguan</Button>
