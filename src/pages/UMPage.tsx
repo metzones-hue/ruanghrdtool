@@ -57,8 +57,8 @@ export default function UMPage() {
     const k = karyawan.find(x => x.id === kId);
     if (!k) return { hadir: 0, alpha: 0, umRate: 40000, umKotor: 0, potonganKB: 0, potonganDD: 0, umBersih: 0, lemburPeriode: 0, lemburCount: 0, detailRows: [] };
 
-    const umRate = k.uangMakan || (k.divisi === 'HO' ? 40000 : 40000);
-
+    const umRate = k.divisi === 'HO' ? 40000 : (k.uangMakan || 40000);
+    
     if (umMode === 'minggu' && periodeVal) {
       const p = getPeriodeUM(periodeVal);
       const abs = absensi.filter(a => a.karyawanId === kId && a.tanggal >= p.mulai && a.tanggal <= p.selesai);
