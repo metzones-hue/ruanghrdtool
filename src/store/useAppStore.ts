@@ -764,9 +764,6 @@ const useAppStore = create<StoreState>()(
 
         const bpjs = k.bpjs || 0;
 
-        const totalMenitTelat = absBulan.reduce((s, a) => s + (a.menitTelat || 0), 0);
-        const potonganTelat = totalMenitTelat * state.pengaturan.potonganTelat;
-
         const potonganKasbon = state.getSisaKasbonGaji(k.id);
         const totalMenitTelat = absBulan.reduce((s, a) => s + (a.menitTelat || 0), 0);
         const potonganTelat = k.divisi === 'HO' ? totalMenitTelat * state.pengaturan.potonganTelat : 0;
