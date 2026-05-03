@@ -226,28 +226,28 @@ export default function UMPage() {
         </CardContent>
       </Card>
 
-      {/* Hidden print area */}
-      {karyawanPrintData && printData && (
-        <div className="hidden">
-          <div ref={slipRef}>
-            <SlipUM
-              karyawan={karyawanPrintData}
-              periodeLabel={periodeLabel}
-              hadir={printData.hadir}
-              alpha={printData.alpha}
-              umRate={printData.umRate}
-              umKotor={printData.umKotor}
-              potonganKB={printData.potonganKB}
-              potonganDD={printData.potonganDD}
-              umBersih={printData.umBersih}
-              lemburPeriode={printData.lemburPeriode}
-              lemburCount={printData.lemburCount}
-              totalBayar={printData.umBersih + printData.lemburPeriode}
-              detailRows={printData.detailRows}
-            />
-          </div>
-        </div>
-      )}
+      {/* Hidden print area - always rendered */}
+<div className="hidden">
+  <div ref={slipRef}>
+    {karyawanPrintData && printData && (
+      <SlipUM
+        karyawan={karyawanPrintData}
+        periodeLabel={periodeLabel}
+        hadir={printData.hadir}
+        alpha={printData.alpha}
+        umRate={printData.umRate}
+        umKotor={printData.umKotor}
+        potonganKB={printData.potonganKB}
+        potonganDD={printData.potonganDD}
+        umBersih={printData.umBersih}
+        lemburPeriode={printData.lemburPeriode}
+        lemburCount={printData.lemburCount}
+        totalBayar={printData.umBersih + printData.lemburPeriode}
+        detailRows={printData.detailRows}
+      />
+    )}
+  </div>
+</div>
     </div>
   );
 }
