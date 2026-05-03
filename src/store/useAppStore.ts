@@ -452,8 +452,7 @@ const useAppStore = create<StoreState>()(
   get().addNotification({ judul: 'Penggajian Selesai', pesan: `Gaji periode ${periode} telah diproses`, type: 'success', modul: 'Gaji', link: '/gaji' });
 },
 
-      },
-      tandaiGajiBayar: (karyawanId, periode) => {
+        tandaiGajiBayar: (karyawanId, periode) => {
         const state = get();
         const k = state.karyawan.find(x => x.id === karyawanId);
         if (!k) return;
