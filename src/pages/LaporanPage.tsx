@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import useAppStore from '@/store/useAppStore';
 import { fRp, getBulanOptions, currentBulan, getKamisList, getPeriodeUM } from '@/lib/utils';
-import { Download } from 'lucide-react';
+import { Download, Printer } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 export default function LaporanPage() {
@@ -173,6 +173,9 @@ export default function LaporanPage() {
               <Button onClick={generateReport} className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold">
                 <Download className="w-4 h-4 mr-1" /> Export Excel
               </Button>
+          <Button onClick={() => window.print()} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold">
+        <Printer className="w-4 h-4 mr-1" /> Print Laporan
+      </Button>
             </div>
           </div>
         </CardContent>
