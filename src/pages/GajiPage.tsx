@@ -15,12 +15,14 @@ export default function GajiPage() {
   const [periode, setPeriode] = useState(() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; });
   const [slipKaryawan, setSlipKaryawan] = useState<{ k: Karyawan; calc: ReturnType<typeof hitungGajiKaryawan> } | null>(null);
   const slipRef = useRef<HTMLDivElement>(null);
-
+  const laporanRef = useRef<HTMLDivElement>(null);
+  
   const [filterCabang, setFilterCabang] = useState('Semua');
   const aktif = karyawan.filter(k => k.status === 'Aktif' && (filterCabang === 'Semua' || k.cabang === filterCabang));
   const cabangList = ['Semua', ...Array.from(new Set(karyawan.filter(k => k.status === 'Aktif').map(k => k.cabang)))];
-  const gajiPeriode = gaji.filter(g => g.periode === periode);
   const handlePrintSlip = useReactToPrint({ contentRef: slipRef, documentTitle: 'Slip Gaji' });
+  const handlePrintLaporan = useReactToPrint({ contentRef: laporanRef, documentTitle: `Laporan Gaji ${periode}` });
+  const gajiPeriode = gaji.filter(g => g.periode === periode);
   const calculateGaji = () => { hitungSemuaGaji(periode); toast.success('Gaji dihitung untuk semua karyawan'); };
 
   const showSlip = (kId: number) => {
@@ -67,9 +69,13 @@ const totalSudahBayar = aktif.filter(k =>
     <Button variant="outline" onClick={calculateGaji} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300">
       <Calculator className="w-4 h-4 mr-1" /> Hitung Semua
     </Button>
-    <Button size="sm" onClick={() => { aktif.forEach(k => { const g = gajiPeriode.find(x => x.karyawanId === k.id); if (g && g.status === 'Belum Dibayar') tandaiGajiBayar(k.id, periode); }); toast.success('Semua gaji ditandai dibayar'); }} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
-      <Check className="w-4 h-4 mr-1" /> Bayar Semua
-    </Button>
+  
+  <Button variant="outline" onClick={() => handlePrintLaporan()} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800">
+  <Printer className="w-4 h-4 mr-1" /> Print Laporan
+</Button>
+<Button size="sm" onClick={() => { aktif.forEach(k => { const g = gajiPeriode.find(x => x.karyawanId === k.id); if (g && g.status === 'Belum Dibayar') tandaiGajiBayar(k.id, periode); }); toast.success('Semua gaji ditandai dibayar'); }} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+  <Check className="w-4 h-4 mr-1" /> Bayar Semua
+</Button>
   </div>
 </div>
 
@@ -145,6 +151,68 @@ const totalSudahBayar = aktif.filter(k =>
           </div>
         </div>
       )}
+      {/* Hidden laporan area */}
+<div className="absolute -left-[9999px] top-0">
+  <div ref={laporanRef}>
+    <div className="bg-white text-black p-8" style={{ fontFamily: 'Arial, sans-serif', minWidth: '900px' }}>
+      <div className="flex justify-between items-start border-b-4 border-amber-500 pb-4 mb-6">
+        <div>
+          <h1 className="text-3xl font-black text-amber-500">RUANG<span className="text-black">PRINT</span></h1>
+          <p className="text-gray-500 text-sm">Laporan Penggajian</p>
+        </div>
+        <div className="text-right text-sm">
+          <p className="font-bold">{periode}</p>
+          <p className="text-gray-500">{aktif.length} karyawan</p>
+        </div>
+      </div>
+      <table className="w-full text-xs border-collapse">
+        <thead>
+          <tr className="bg-amber-500 text-white">
+            <th className="py-2 px-2 text-left">Nama</th>
+            <th className="py-2 px-2 text-left">Cabang</th>
+            <th className="py-2 px-2 text-right">Gaji Pokok</th>
+            <th className="py-2 px-2 text-right">Tunjangan</th>
+            <th className="py-2 px-2 text-right">Insentif</th>
+            <th className="py-2 px-2 text-right">UM</th>
+            <th className="py-2 px-2 text-right">Lembur</th>
+            <th className="py-2 px-2 text-right">BPJS</th>
+            <th className="py-2 px-2 text-right">Pot. Telat</th>
+            <th className="py-2 px-2 text-right">Total</th>
+            <th className="py-2 px-2 text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {aktif.map((k, i) => {
+            const g = gajiPeriode.find(x => x.karyawanId === k.id);
+            return (
+              <tr key={k.id} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                <td className="py-1.5 px-2 font-medium">{k.nama}</td>
+                <td className="py-1.5 px-2">{k.divisi}</td>
+                <td className="py-1.5 px-2 text-right">{fRp(g?.gaji || k.gajiPokok)}</td>
+                <td className="py-1.5 px-2 text-right">{fRp(g?.tunjangan || k.tunjangan)}</td>
+                <td className="py-1.5 px-2 text-right">{g?.insentif ? fRp(g.insentif) : '-'}</td>
+                <td className="py-1.5 px-2 text-right">{fRp(g?.uangMakan || 0)}</td>
+                <td className="py-1.5 px-2 text-right">{fRp(g?.lembur || 0)}</td>
+                <td className="py-1.5 px-2 text-right">{fRp(g?.bpjs || 0)}</td>
+                <td className="py-1.5 px-2 text-right">{g?.potonganTelat ? fRp(g.potonganTelat) : '-'}</td>
+                <td className="py-1.5 px-2 text-right font-bold">{fRp(g?.total || 0)}</td>
+                <td className="py-1.5 px-2 text-center">{g?.status || '-'}</td>
+              </tr>
+            );
+          })}
+          <tr className="bg-amber-500 text-white font-bold">
+            <td colSpan={9} className="py-2 px-2 text-right">TOTAL</td>
+            <td className="py-2 px-2 text-right">{fRp(totalGaji)}</td>
+            <td />
+          </tr>
+        </tbody>
+      </table>
+      <div className="mt-6 pt-4 border-t border-gray-200 text-center text-xs text-gray-400">
+        Dicetak oleh RuangHRD &middot; {new Date().toLocaleDateString('id-ID')}
+      </div>
+    </div>
+  </div>
+</div>
     </div>
   );
 }
