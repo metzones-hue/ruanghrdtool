@@ -131,10 +131,10 @@ export function DataTable<T extends { id: number }>({
       </Button>
     </div>
   </div>
-)}
-      )}
+    }
     </div>
-  );
+   );
+  }
 }
 
 export default DataTable;
