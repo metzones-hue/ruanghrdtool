@@ -23,26 +23,28 @@ export default function LemburPage() {
     karyawanId: '', tanggal: todayStr(), mulai: '', selesai: '', alasan: '',
   });
   const [filterCabang, setFilterCabang] = useState('all');
-const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
   const aktif = karyawan.filter(k => k.status === 'Aktif');
   const filtered = lembur
-  .filter(l => l.tanggal.startsWith(bulan) && (filterCabang === 'all' || l.divisi === filterCabang))
-  .map(l => ({
-    ...l,
-  totalUpah: Math.ceil((l.totalUpah || 0) / 100) * 100,
-  }));
-useEffect(() => {
-  const raw = localStorage.getItem('lembur');
-  if (!raw) return;
-  const data = JSON.parse(raw);
-  const fixed = data.map((item: any) => ({
-    ...item,
-    upah: Math.ceil((item.upah || 0) / 100) * 100,
-  }));
-  localStorage.setItem('lembur', JSON.stringify(fixed));
-}, []);
+    .filter(l => l.tanggal.startsWith(bulan) && (filterCabang === 'all' || l.divisi === filterCabang))
+    .map(l => ({
+      ...l,
+      totalUpah: Math.ceil((l.totalUpah || 0) / 100) * 100,
+    }));
 
-const toMin = (t: string) => {
+  useEffect(() => {
+    const raw = localStorage.getItem('lembur');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    const fixed = data.map((item: any) => ({
+      ...item,
+      upah: Math.ceil((item.upah || 0) / 100) * 100,
+    }));
+    localStorage.setItem('lembur', JSON.stringify(fixed));
+  }, []);
+
+  const toMin = (t: string) => {
     const [h, m] = t.split(':').map(Number);
     return h * 60 + m;
   };
@@ -108,7 +110,7 @@ const toMin = (t: string) => {
       let upah = jamTotal * (k.upahLembur || pg.upahLembur);
       if (isMingguAuto) upah *= 2;
       const totalUpah = Math.ceil((upah + bonusMalam + bonusUM) / 100) * 100;
-      
+
       const ex = lembur.find(l => l.karyawanId === a.karyawanId && l.tanggal === a.tanggal && l.mulai === jamKeluar);
       if (!ex) {
         addLembur({
@@ -140,7 +142,8 @@ const toMin = (t: string) => {
     { key: 'tanggal' as keyof Lembur, label: 'Tanggal', header: 'Tanggal' },
     { key: 'divisi' as keyof Lembur, label: 'Cabang', header: 'Cabang' },
     { key: 'jamTotal' as keyof Lembur, label: 'Jam', header: 'Jam', format: (v: number) => `${v.toFixed(1)} jam` },
-    { key: 'upah' as keyof Lembur, label: 'Upah', header: 'Upah', format: (v: number) => fRp(Math.ceil(v / 100) * 100) },    {
+    { key: 'upah' as keyof Lembur, label: 'Upah', header: 'Upah', format: (v: number) => fRp(Math.ceil(v / 100) * 100) },
+    {
       key: 'status' as keyof Lembur,
       label: 'Status',
       header: 'Status',
@@ -157,70 +160,37 @@ const toMin = (t: string) => {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Lembur</h1>
           <p className="text-gray-500 dark:text-neutral-400 text-sm">{totalPending} pending &middot; {totalDisetujui} disetujui</p>
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
+          <Select value={bulan} onValueChange={setBulan}>
+            <SelectTrigger className="w-[160px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
+            <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
+              {getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={filterCabang} onValueChange={setFilterCabang}>
+            <SelectTrigger className="w-[140px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
+            <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
+              <SelectItem value="all" className="text-gray-900 dark:text-neutral-200">Semua Cabang</SelectItem>
+              {Array.from(new Set(karyawan.filter(k => k.status === 'Aktif').map(k => k.divisi))).map(c => (
+                <SelectItem key={c} value={c} className="text-gray-900 dark:text-neutral-200">{c}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button variant="outline" onClick={recalculateFromAbsensi} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800">
             <Calculator className="w-4 h-4 mr-1" /> Auto-Detect
           </Button>
           <Button onClick={() => setOpenForm(true)} className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">
             <Plus className="w-4 h-4 mr-1" /> Input Lembur
           </Button>
-          <Button
-  size="sm"
- onClick={() => {
-  const pendingIds = filtered
-    .filter(l => l.status === 'Pending')
-    .map(l => l.id);
-  pendingIds.forEach(id => approveLembur(id, 'Disetujui'));
-  toast.success(`${pendingIds.length} lembur disetujui`);
-}}
-  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
->
-  <Check className="w-4 h-4 mr-1" /> Approve Semua
-</Button>
+          <Button size="sm" onClick={() => {
+            const pendingIds = filtered.filter(l => l.status === 'Pending').map(l => l.id);
+            pendingIds.forEach(id => approveLembur(id, 'Disetujui'));
+            toast.success(`${pendingIds.length} lembur disetujui`);
+          }} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+            <Check className="w-4 h-4 mr-1" /> Approve Semua
+          </Button>
         </div>
       </div>
-
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-  <div>
-    <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Lembur</h1>
-    <p className="text-gray-500 dark:text-neutral-400 text-sm">{totalPending} pending &middot; {totalDisetujui} disetujui</p>
-  </div>
-  <div className="flex flex-wrap items-center gap-2">
-    <Select value={bulan} onValueChange={setBulan}>
-      <SelectTrigger className="w-[160px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
-      <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}</SelectContent>
-    </Select>
-    <Select value={filterCabang} onValueChange={setFilterCabang}>
-      <SelectTrigger className="w-[140px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
-      <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
-        <SelectItem value="all">Semua Cabang</SelectItem>
-        {Array.from(new Set(karyawan.filter(k => k.status === 'Aktif').map(k => k.divisi))).map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-      </SelectContent>
-    </Select>
-    <Button variant="outline" onClick={recalculateFromAbsensi} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300">
-      <Calculator className="w-4 h-4 mr-1" /> Auto-Detect
-    </Button>
-    <Button onClick={() => setOpenForm(true)} className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">
-      <Plus className="w-4 h-4 mr-1" /> Input Lembur
-    </Button>
-    <Button size="sm" onClick={() => { const pendingIds = filtered.filter(l => l.status === 'Pending').map(l => l.id); pendingIds.forEach(id => approveLembur(id, 'Disetujui')); toast.success(`${pendingIds.length} lembur disetujui`); }} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
-      <Check className="w-4 h-4 mr-1" /> Approve Semua
-    </Button>
-  </div>
-</div>
-
-      <Select value={filterCabang} onValueChange={setFilterCabang}>
-  <SelectTrigger className="w-[150px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
-    <SelectValue placeholder="Semua Cabang" />
-  </SelectTrigger>
-  <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
-    <SelectItem value="all" className="text-gray-900 dark:text-neutral-200">Semua Cabang</SelectItem>
-    {[...new Set(lembur.map(l => l.divisi).filter(Boolean))].map(c => (
-      <SelectItem key={c} value={c!} className="text-gray-900 dark:text-neutral-200">{c}</SelectItem>
-    ))}
-  </SelectContent>
-</Select>
-</div>
 
       {userRole === 'kepala' && selectedIds.length > 0 && (
         <div className="flex gap-2">
@@ -274,5 +244,8 @@ const toMin = (t: string) => {
         </div>
       )}
     </div>
+  );
+}
+
   );
 }
