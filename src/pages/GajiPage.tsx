@@ -105,7 +105,7 @@ export default function GajiPage() {
                     <td className="py-2 px-2 text-right text-emerald-500 text-sm">{g?.insentif ? fRp(g.insentif) : '-'}</td>
                     <td className="py-2 px-2 text-right text-gray-600 dark:text-neutral-400 text-sm">{fRp(g?.uangMakan || 0)}</td>
                     <td className="py-2 px-2 text-right text-amber-500 text-sm">{fRp(g?.lembur || 0)}</td>
-                    <td className="py-2 px-2 text-right text-red-500 text-sm">{fRp(g?.bpjs || 0)}</td>
+                    <td className="py-2 px-2 text-right text-red-500 text-sm">{k.bpjs ? fRp(k.bpjs) : '-'}
                     <td className="py-2 px-2 text-right text-red-500 text-sm">{g?.potonganTelat ? fRp(g.potonganTelat) : '-'}</td>
                     <td className="py-2 px-2 text-right text-red-500 text-sm">{g?.potonganKasbon ? fRp(g.potonganKasbon) : '-'}</td>
                     <td className="py-2 px-2 text-right text-amber-500 text-sm font-bold">{fRp(g?.total || 0)}</td>
