@@ -11,6 +11,7 @@ interface SlipUMProps {
   umKotor: number;
   potonganKB: number;
   potonganDD: number;
+  potonganTelat: number;
   umBersih: number;
   lemburPeriode: number;
   lemburCount: number;
@@ -19,7 +20,7 @@ interface SlipUMProps {
 }
 
 export const SlipUM = forwardRef<HTMLDivElement, SlipUMProps>(
-  ({ karyawan, periodeLabel, hadir, alpha, umRate, umKotor, potonganKB, potonganDD, umBersih, lemburPeriode, lemburCount, totalBayar, detailRows }, ref) => {
+  ({ karyawan, periodeLabel, hadir, alpha, umRate, umKotor, potonganKB, potonganDD, potonganTelat, umBersih, lemburPeriode, lemburCount, totalBayar, detailRows }, ref) => {
     const umRateFormatted = (umRate || 40000).toLocaleString('id-ID');
     return (
       <div ref={ref} className="bg-white text-black p-8 max-w-[500px] mx-auto" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -88,6 +89,12 @@ export const SlipUM = forwardRef<HTMLDivElement, SlipUMProps>(
               <span className="text-orange-500 font-bold">-{fRp(potonganDD)}</span>
             </div>
           )}
+          {potonganTelat > 0 && (
+            <div className="flex justify-between py-2 border-b border-dashed border-gray-200 text-sm">
+              <span className="text-red-500">Potongan Telat</span>
+              <span className="text-red-500 font-bold">-{fRp(potonganTelat)}</span>
+            </div>
+          )}
           <div className="flex justify-between py-2 border-b-2 border-gray-200 text-sm">
             <strong>UM Bersih</strong>
             <strong>{fRp(umBersih)}</strong>
@@ -138,3 +145,4 @@ export const SlipUM = forwardRef<HTMLDivElement, SlipUMProps>(
 );
 
 SlipUM.displayName = 'SlipUM';
+
