@@ -31,9 +31,14 @@ export default function GajiPage() {
   setTimeout(() => handlePrintSlip(), 500);
 };
 
-  const totalGaji = gajiPeriode.reduce((s, g) => s + g.total, 0);
-  const totalSudahBayar = gajiPeriode.filter(g => g.status === 'Sudah Dibayar').length;
+ const gajiFiltered = gajiPeriode.filter(g =>
+  filterCabang === 'Semua' ||
+  karyawan.find(k => k.id === g.karyawanId)?.divisi === filterCabang
+);
 
+const totalGaji = gajiFiltered.reduce((s, g) => s + g.total, 0);
+const totalSudahBayar = gajiFiltered.filter(g => g.status === 'Sudah Dibayar').length;
+  
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
