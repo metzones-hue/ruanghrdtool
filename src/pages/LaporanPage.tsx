@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -7,21 +7,74 @@ import { toast } from 'sonner';
 import useAppStore from '@/store/useAppStore';
 import { fRp, getBulanOptions, currentBulan, getKamisList, getPeriodeUM } from '@/lib/utils';
 import { Download, Printer } from 'lucide-react';
+import { useReactToPrint } from 'react-to-print';
 import * as XLSX from 'xlsx';
-
+ 
 export default function LaporanPage() {
   const { karyawan, absensi, lembur, gaji, cuti, kasbon } = useAppStore();
   const [reportType, setReportType] = useState('absensi');
   const [bulan, setBulan] = useState(currentBulan());
   const [dateMulai, setDateMulai] = useState('');
   const [dateSelesai, setDateSelesai] = useState('');
-
+  const printRef = useRef<HTMLDivElement>(null);
+ 
   const aktif = karyawan.filter(k => k.status === 'Aktif');
-
+ 
+  const getReportData = () => {
+    switch (reportType) {
+      case 'absensi': return {
+        title: 'LAPORAN ABSENSI',
+        subtitle: `Periode: ${bulan}`,
+        headers: ['Nama', 'Cabang', 'Hadir', 'Alpha', 'Cuti', 'Sakit', 'Izin', 'Telat (mnt)'],
+        rows: aktif.map(k => {
+          const abs = absensi.filter(a => a.karyawanId === k.id && a.tanggal.startsWith(bulan));
+          return [k.nama, k.divisi, abs.filter(a => a.status === 'Hadir').length, abs.filter(a => a.status === 'Alpha').length,
+            abs.filter(a => a.status === 'Cuti').length, abs.filter(a => a.status === 'Sakit').length,
+            abs.filter(a => a.status === 'Izin').length, abs.reduce((s, a) => s + a.menitTelat, 0)];
+        })
+      };
+      case 'gaji': return {
+        title: 'LAPORAN PENGGAJIAN',
+        subtitle: `Periode: ${bulan}`,
+        headers: ['Nama', 'Cabang', 'Gaji Pokok', 'Tunjangan', 'Insentif', 'UM', 'Lembur', 'BPJS', 'Pot. Telat', 'Total'],
+        rows: aktif.map(k => {
+          const g = gaji.find(x => x.karyawanId === k.id && x.periode === bulan);
+          return [k.nama, k.divisi, fRp(g?.gaji || k.gajiPokok), fRp(g?.tunjangan || k.tunjangan),
+            fRp(g?.insentif || 0), fRp(g?.uangMakan || 0), fRp(g?.lembur || 0),
+            fRp(g?.bpjs || 0), fRp(g?.potonganTelat || 0), fRp(g?.total || 0)];
+        })
+      };
+      case 'lembur': return {
+        title: 'LAPORAN LEMBUR',
+        subtitle: `Periode: ${bulan}`,
+        headers: ['Nama', 'Cabang', 'Tanggal', 'Mulai', 'Selesai', 'Jam', 'Status', 'Total Upah'],
+        rows: lembur.filter(l => l.tanggal.startsWith(bulan)).map(l =>
+          [l.nama, l.divisi, l.tanggal, l.mulai, l.selesai, l.jamTotal, l.status, fRp(l.totalUpah)])
+      };
+      case 'telat': return {
+        title: 'LAPORAN KETERLAMBATAN',
+        subtitle: `Periode: ${bulan}`,
+        headers: ['Nama', 'Cabang', 'Total Telat (mnt)', 'Potongan (Rp)', 'Jumlah Kejadian'],
+        rows: aktif.map(k => {
+          const abs = absensi.filter(a => a.karyawanId === k.id && a.tanggal.startsWith(bulan) && a.menitTelat > 0);
+          const totalTelat = abs.reduce((s, a) => s + a.menitTelat, 0);
+          return [k.nama, k.divisi, totalTelat, fRp(totalTelat * 1000), abs.length];
+        })
+      };
+      case 'kasbon': return {
+        title: 'LAPORAN KAS BON',
+        subtitle: '',
+        headers: ['Nama', 'Tanggal', 'Jumlah', 'Via', 'Cicilan', 'Sisa', 'Status'],
+        rows: kasbon.map(k => [k.nama, k.tanggal, fRp(k.jumlah), k.via, fRp(k.cicilan), fRp(k.sisaHutang), k.status])
+      };
+      default: return { title: 'LAPORAN', subtitle: bulan, headers: [], rows: [] };
+    }
+  };
+ 
   const generateReport = () => {
     let data: unknown[][] = [];
     let filename = '';
-
+ 
     switch (reportType) {
       case 'absensi': {
         filename = `Laporan_Absensi_${bulan}`;
@@ -118,14 +171,16 @@ export default function LaporanPage() {
         break;
       }
     }
-
+ 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(data);
     XLSX.utils.book_append_sheet(wb, ws, 'Laporan');
     XLSX.writeFile(wb, `${filename}.xlsx`);
     toast.success(`Laporan ${filename} berhasil diunduh`);
   };
-
+ 
+  const handlePrint = useReactToPrint({ contentRef: printRef, documentTitle: `Laporan_${reportType}_${bulan}` });
+ 
   const reportTypes = [
     { value: 'absensi', label: 'Absensi' },
     { value: 'gaji', label: 'Penggajian' },
@@ -137,14 +192,16 @@ export default function LaporanPage() {
     { value: 'kasbon', label: 'Kas Bon' },
     { value: 'tahunan', label: 'Rekap Tahunan' },
   ];
-
+ 
+  const reportData = getReportData();
+ 
   return (
     <div className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Laporan</h1>
         <p className="text-gray-500 dark:text-neutral-400 text-sm">Export data ke Excel &mdash; {reportTypes.length} jenis laporan</p>
       </div>
-
+ 
       <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
         <CardContent className="p-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -169,24 +226,65 @@ export default function LaporanPage() {
                 <Input type="date" value={dateSelesai} onChange={e => setDateSelesai(e.target.value)} className="bg-gray-100 dark:bg-neutral-800 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200 text-xs" />
               </div>
             </div>
-            <div className="flex items-end">
-              <Button onClick={generateReport} className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold">
+            <div className="flex items-end gap-2">
+              <Button onClick={generateReport} className="flex-1 bg-amber-500 hover:bg-amber-600 text-black font-semibold">
                 <Download className="w-4 h-4 mr-1" /> Export Excel
               </Button>
-          <Button onClick={() => window.print()} className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold">
-        <Printer className="w-4 h-4 mr-1" /> Print Laporan
-      </Button>
+              <Button onClick={() => handlePrint()} variant="outline" className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800 px-3">
+                <Printer className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
-
+ 
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Karyawan Aktif</p><p className="text-amber-500 text-xl font-bold">{aktif.length}</p></CardContent></Card>
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Absensi Bulan Ini</p><p className="text-emerald-500 text-xl font-bold">{absensi.filter(a => a.tanggal.startsWith(bulan)).length}</p></CardContent></Card>
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Lembur Pending</p><p className="text-amber-500 text-xl font-bold">{lembur.filter(l => l.status === 'Pending').length}</p></CardContent></Card>
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Kasbon Aktif</p><p className="text-red-500 text-xl font-bold">{fRp(kasbon.filter(k => k.status === 'Aktif').reduce((s, k) => s + k.sisaHutang, 0))}</p></CardContent></Card>
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total Gaji</p><p className="text-blue-500 text-xl font-bold">{fRp(gaji.filter(g => g.periode === bulan).reduce((s, g) => s + g.total, 0))}</p></CardContent></Card>
+      </div>
+ 
+      {/* Hidden print area */}
+      <div className="hidden">
+        <div ref={printRef}>
+          <div className="bg-white text-black p-8" style={{ fontFamily: 'Arial, sans-serif' }}>
+            <div className="flex justify-between items-start border-b-4 border-amber-500 pb-4 mb-6">
+              <div>
+                <h1 className="text-3xl font-black text-amber-500 tracking-wider">RUANG<span className="text-black">PRINT</span></h1>
+                <p className="text-gray-500 text-sm mt-1">{reportData.title}</p>
+              </div>
+              <div className="text-right text-sm">
+                <p className="font-bold">{reportData.subtitle}</p>
+                <p className="text-gray-500">{new Date().toLocaleDateString('id-ID')}</p>
+              </div>
+            </div>
+            {reportData.headers.length > 0 && (
+              <table className="w-full text-xs border-collapse">
+                <thead>
+                  <tr style={{ backgroundColor: '#F59E0B', color: 'white' }}>
+                    {reportData.headers.map((h, i) => (
+                      <th key={i} style={{ padding: '6px 8px', textAlign: i > 1 ? 'right' : 'left', borderBottom: '1px solid #D97706' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {reportData.rows.map((row, i) => (
+                    <tr key={i} style={{ backgroundColor: i % 2 === 0 ? 'white' : '#F9FAFB' }}>
+                      {row.map((cell, j) => (
+                        <td key={j} style={{ padding: '5px 8px', textAlign: j > 1 ? 'right' : 'left', borderBottom: '1px solid #E5E7EB' }}>{String(cell)}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            <div className="mt-8 pt-4 border-t border-gray-200 text-center text-xs text-gray-400">
+              Dicetak oleh RuangHRD &middot; RuangPrint &middot; {new Date().toLocaleDateString('id-ID')}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
