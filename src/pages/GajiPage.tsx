@@ -133,7 +133,7 @@ export default function GajiPage() {
 
       {/* Hidden print area */}
       {slipKaryawan && (
-        <div className="hidden">
+        <div className="absolute -left-[9999px] top-0">
           <div ref={slipRef}>
             <SlipGaji karyawan={slipKaryawan.k} periode={periode} calc={slipKaryawan.calc} />
           </div>
