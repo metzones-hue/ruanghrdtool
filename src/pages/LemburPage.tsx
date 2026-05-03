@@ -128,15 +128,13 @@ export default function LemburPage() {
   };
 
   const totalPending = filtered.filter(l => l.status === 'Pending').length;
-  const totalDisetujui = filtered.filter(l => l.status === 'Disetujui').length;
-  const totalUpah = filtered.filter(l => l.status === 'Disetujui').reduce((s, l) => s + l.totalUpah, 0);
+const totalDisetujui = filtered.filter(l => l.status === 'Disetujui').length;
 
-  const bulkApprove = (status: 'Disetujui' | 'Ditolak') => {
-    selectedIds.forEach(id => approveLembur(id, status));
-    toast.success(`${selectedIds.length} lembur ${status.toLowerCase()}`);
-    setSelectedIds([]);
-  };
-
+const bulkApprove = (status: 'Disetujui' | 'Ditolak') => {
+  selectedIds.forEach(id => approveLembur(id, status));
+  toast.success(`${selectedIds.length} lembur ${status.toLowerCase()}`);
+  setSelectedIds([]);
+};
   const columns = [
     { key: 'nama' as keyof Lembur, label: 'Nama', header: 'Nama' },
     { key: 'tanggal' as keyof Lembur, label: 'Tanggal', header: 'Tanggal' },
