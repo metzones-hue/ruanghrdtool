@@ -40,7 +40,7 @@ export default function UMPage() {
   const [umMode, setUMMode] = useState<UMModeType>('minggu');
   const [periodeMinggu, setPeriodeMinggu] = useState(getKamisList()[0]?.value || '');
   const [periodeBulan, setPeriodeBulan] = useState(currentBulan());
-  const [cabangFilter, setCabangFilter] = useState('');
+  const [cabangFilter, setCabangFilter] = useState('all');
   const [printKaryawan, setPrintKaryawan] = useState<number | null>(null);
   const slipRef = useRef<HTMLDivElement>(null);
 
