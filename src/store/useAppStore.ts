@@ -756,9 +756,11 @@ const useAppStore = create<StoreState>()(
 
         const insentif = alphaCount === 0 ? (state.pengaturan.insentifKehadiran || 300000) : 0;
 
-        const uangMakan = k.umMode === 'bulanan'
-          ? hariHadir * state.pengaturan.umPerHariHO
-          : 0;
+        cconst uangMakan = k.umMode === 'bulanan'
+  ? (k.divisi === 'HO'
+    ? Math.max(0, 960000 - (alphaCount * 40000))
+    : hariHadir * (k.uangMakan || state.pengaturan.umPerHari))
+  : 0;
 
         const lembur = state.lembur
           .filter(l => l.karyawanId === k.id && l.status === 'Disetujui' && l.tanggal.startsWith(periode))
