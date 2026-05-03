@@ -20,7 +20,7 @@ export default function GajiPage() {
   const aktif = karyawan.filter(k => k.status === 'Aktif' && (filterCabang === 'Semua' || k.cabang === filterCabang));
   const cabangList = ['Semua', ...Array.from(new Set(karyawan.filter(k => k.status === 'Aktif').map(k => k.cabang)))];
   const gajiPeriode = gaji.filter(g => g.periode === periode);
-
+  const handlePrintSlip = useReactToPrint({ contentRef: slipRef, documentTitle: 'Slip Gaji' });
   const calculateGaji = () => { hitungSemuaGaji(periode); toast.success('Gaji dihitung untuk semua karyawan'); };
 
   const showSlip = (kId: number) => {
