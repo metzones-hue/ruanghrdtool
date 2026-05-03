@@ -52,8 +52,8 @@ export default function AbsensiPage() {
     if (form.status === 'Hadir' && form.masuk) {
       const jamMasukMin = parseInt(form.masuk.split(':')[0]) * 60 + parseInt(form.masuk.split(':')[1]);
       const batasMin = isShift2
-    ? parseInt((pg.toleransiTelatShift2 ?? pg.batasTelatShift2 ?? 0).toString())
-    : parseInt((pg.toleransiTelat ?? pg.batasTelat ?? 0).toString());
+  ? parseInt(pg.batasTelatShift2.toString())
+  : parseInt(pg.batasTelat.toString());
       const jm1 = (pg.jamMasukShift1 || '08:30').split(':').map(Number);
       const jm2 = (pg.jamMasukShift2 || '12:00').split(':').map(Number);
       const shiftStartMin = isShift2 ? jm2[0]*60+jm2[1] : jm1[0]*60+jm1[1];
