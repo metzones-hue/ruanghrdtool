@@ -136,7 +136,7 @@ export default function UMPage() {
     <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Uang Makan</h1>
     <p className="text-gray-500 dark:text-neutral-400 text-sm">{periodeLabel}</p>
   </div>
-  <div className="flex flex-wrap items-center gap-2">
+  <div className="flex flex-wrap items-center gap-3">
   {umMode === 'minggu' ? (
     <Select value={periodeMinggu} onValueChange={setPeriodeMinggu}>
       <SelectTrigger className="w-[220px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
@@ -148,9 +148,8 @@ export default function UMPage() {
       <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}</SelectContent>
     </Select>
   )}
- )}
-<div className="w-4" />
-<Select value={cabangFilter}
+  
+  <Select value={cabangFilter}
     <SelectTrigger className="w-[140px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
     <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
       <SelectItem value="all" className="text-gray-900 dark:text-neutral-200">Semua</SelectItem>
