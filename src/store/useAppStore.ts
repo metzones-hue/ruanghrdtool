@@ -432,28 +432,29 @@ const useAppStore = create<StoreState>()(
         };
       },
       hitungSemuaGaji: (periode) => {
-        const state = get();
-        const aktif = state.karyawan.filter(k => k.status === 'Aktif');
-        const newGaji: GajiRecord[] = [];
-        aktif.forEach(k => {
-          const ex = state.gaji.find(g => g.karyawanId === k.id && g.periode === periode);
-          if (!ex) {
-            const calc = state.hitungGajiKaryawan(k, periode);
-            newGaji.push({
-              id: nextId([...state.gaji, ...newGaji]),
-              karyawanId: k.id,
-              nama: k.nama,
-              periode,
-              ...calc,
-              status: 'Sudah Dibayar',
-            });
-          } else {
-            ex.status = 'Sudah Dibayar';
-          }
-        });
-        set({ gaji: [...state.gaji, ...newGaji] });
-        get().addAuditLog({ user: state.userName || 'System', role: state.userRole || 'staff', aksi: 'CREATE', modul: 'Gaji', detail: `Hitung gaji periode ${periode} untuk ${aktif.length} karyawan` });
-        get().addNotification({ judul: 'Penggajian Selesai', pesan: `Gaji periode ${periode} telah diproses`, type: 'success', modul: 'Gaji', link: '/gaji' });
+  const state = get();
+  const aktif = state.karyawan.filter(k => k.status === 'Aktif');
+  const newGaji: GajiRecord[] = [];
+  aktif.forEach(k => {
+    const ex = state.gaji.find(g => g.karyawanId === k.id && g.periode === periode);
+    if (!ex) {
+      const calc = state.hitungGajiKaryawan(k, periode);
+      newGaji.push({
+        id: nextId([...state.gaji, ...newGaji]),
+        karyawanId: k.id,
+        nama: k.nama,
+        periode,
+        ...calc,
+        status: 'Sudah Dibayar',
+      });
+    } else {
+      ex.status = 'Sudah Dibayar';
+    }
+  });
+  set({ gaji: [...state.gaji, ...newGaji] });
+  get().addAuditLog({ user: state.userName || 'System', role: state.userRole || 'staff', aksi: 'CREATE', modul: 'Gaji', detail: `Hitung gaji periode ${periode} untuk ${aktif.length} karyawan` });
+  get().addNotification({ judul: 'Penggajian Selesai', pesan: `Gaji periode ${periode} telah diproses`, type: 'success', modul: 'Gaji', link: '/gaji' });
+},
       },
       tandaiGajiBayar: (karyawanId, periode) => {
         const state = get();
