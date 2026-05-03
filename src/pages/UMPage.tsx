@@ -57,7 +57,7 @@ export default function UMPage() {
     const k = karyawan.find(x => x.id === kId);
     if (!k) return { hadir: 0, alpha: 0, umRate: 40000, umKotor: 0, potonganKB: 0, potonganDD: 0, umBersih: 0, lemburPeriode: 0, lemburCount: 0, detailRows: [] };
 
-    const umRate = k.uangMakan || (k.divisi === 'HO' ? 45000 : 40000);
+    const umRate = k.uangMakan || (k.divisi === 'HO' ? 40000 : 40000);
 
     if (umMode === 'minggu' && periodeVal) {
       const p = getPeriodeUM(periodeVal);
@@ -132,48 +132,38 @@ export default function UMPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Uang Makan</h1>
-          <p className="text-gray-500 dark:text-neutral-400 text-sm">{periodeLabel}</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant={umMode === 'minggu' ? 'default' : 'outline'} onClick={() => setUMMode('minggu')} className={umMode === 'minggu' ? 'bg-amber-500 text-black' : 'bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300'}>Mingguan</Button>
-          <Button variant={umMode === 'bulan' ? 'default' : 'outline'} onClick={() => setUMMode('bulan')} className={umMode === 'bulan' ? 'bg-amber-500 text-black' : 'bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300'}>Bulanan</Button>
-        </div>
-        <Button
-  size="sm"
-  onClick={() => {
-    aktif.forEach(k => {
-      if (!isBayar(k.id)) tandaiUMBayar(k.id, periodeVal);
-    });
-    toast.success('Semua uang makan ditandai dibayar');
-  }}
-  className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
->
-  <Check className="w-4 h-4 mr-1" /> Bayar Semua
-</Button>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {umMode === 'minggu' ? (
-          <Select value={periodeMinggu} onValueChange={setPeriodeMinggu}>
-            <SelectTrigger className="w-[280px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
-            <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getKamisList().map(p => <SelectItem key={p.value} value={p.value} className="text-gray-900 dark:text-neutral-200">{p.label}</SelectItem>)}</SelectContent>
-          </Select>
-        ) : (
-          <Select value={periodeBulan} onValueChange={setPeriodeBulan}>
-            <SelectTrigger className="w-[200px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
-            <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}</SelectContent>
-          </Select>
-        )}
-        <Select value={cabangFilter} onValueChange={setCabangFilter}>
-          <SelectTrigger className="w-[140px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue placeholder="Semua Cabang" /></SelectTrigger>
-          <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
-            <SelectItem value="all" className="text-gray-900 dark:text-neutral-200">Semua</SelectItem>
-            {getCabangKodeList().map(c => <SelectItem key={c} value={c} className="text-gray-900 dark:text-neutral-200">{c}</SelectItem>)}
-          </SelectContent>
-        </Select>
-      </div>
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Uang Makan</h1>
+    <p className="text-gray-500 dark:text-neutral-400 text-sm">{periodeLabel}</p>
+  </div>
+  <div className="flex flex-wrap items-center gap-2">
+    {umMode === 'minggu' ? (
+      <Select value={periodeMinggu} onValueChange={setPeriodeMinggu}>
+        <SelectTrigger className="w-[220px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
+        <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getKamisList().map(p => <SelectItem key={p.value} value={p.value} className="text-gray-900 dark:text-neutral-200">{p.label}</SelectItem>)}</SelectContent>
+      </Select>
+    ) : (
+      <Select value={periodeBulan} onValueChange={setPeriodeBulan}>
+        <SelectTrigger className="w-[160px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
+        <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}</SelectContent>
+      </Select>
+    )}
+    <Select value={cabangFilter} onValueChange={setCabangFilter}>
+      <SelectTrigger className="w-[140px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
+      <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
+        <SelectItem value="all" className="text-gray-900 dark:text-neutral-200">Semua</SelectItem>
+        {getCabangKodeList().map(c => <SelectItem key={c} value={c} className="text-gray-900 dark:text-neutral-200">{c}</SelectItem>)}
+      </SelectContent>
+    </Select>
+    <div className="flex gap-2">
+      <Button variant={umMode === 'minggu' ? 'default' : 'outline'} onClick={() => setUMMode('minggu')} className={umMode === 'minggu' ? 'bg-amber-500 text-black hover:bg-amber-600' : ''}> Mingguan</Button>
+      <Button variant={umMode === 'bulan' ? 'default' : 'outline'} onClick={() => setUMMode('bulan')} className={umMode === 'bulan' ? 'bg-amber-500 text-black hover:bg-amber-600' : ''}>Bulanan</Button>
+    </div>
+    <Button size="sm" onClick={() => { aktif.forEach(k => { if (!isBayar(k.id)) tandaiUMBayar(k.id, periodeVal); }); toast.success('Semua uang makan ditandai dibayar'); }} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+      <Check className="w-4 h-4 mr-1" /> Bayar Semua
+    </Button>
+  </div>
+</div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total UM</p><p className="text-amber-500 text-xl font-bold">{fRp(totalUMBersih)}</p></CardContent></Card>
