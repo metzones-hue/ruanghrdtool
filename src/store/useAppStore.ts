@@ -765,7 +765,7 @@ const useAppStore = create<StoreState>()(
           .filter(l => l.karyawanId === k.id && l.status === 'Disetujui' && l.tanggal.startsWith(periode))
           .reduce((s, l) => s + l.totalUpah, 0);
 
-        const bpjs = Math.round(k.gajiPokok * (state.pengaturan.bpjsKaryawan / 100));
+        const bpjs = k.bpjs || 0;
 
         const totalMenitTelat = absBulan.reduce((s, a) => s + (a.menitTelat || 0), 0);
         const potonganTelat = totalMenitTelat * state.pengaturan.potonganTelat;
