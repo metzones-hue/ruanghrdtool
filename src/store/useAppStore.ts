@@ -760,8 +760,6 @@ const useAppStore = create<StoreState>()(
       const uangMakan = k.umMode === 'bulanan'
       ? (k.divisi === 'HO' ? umBulananHO : hariHadir * (k.uangMakan || state.pengaturan.umPerHari))
       : 0;
-      : hariHadir * (k.uangMakan || state.pengaturan.umPerHari))
-      : 0;
 
         const lembur = state.lembur
           .filter(l => l.karyawanId === k.id && l.status === 'Disetujui' && l.tanggal.startsWith(periode))
