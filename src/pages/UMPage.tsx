@@ -259,7 +259,3 @@ export default function UMPage() {
   );
 }
 
-</div>
-    </div>
-  );
-}
