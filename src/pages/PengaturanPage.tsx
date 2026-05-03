@@ -85,7 +85,8 @@ export default function PengaturanPage() {
         <CardContent className="space-y-3">
           {[
             { key: 'umPerHari', label: 'UM per Hari Cabang (Rp)' },
-            { key: 'umPerHariHO', label: 'UM per Hari HO (Rp)' },
+    { key: 'umPerHariHO', label: 'UM per Hari HO (Rp)' },
+    { key: 'umBulananHO', label: 'UM Bulanan HO (Rp)' },
           ].map(({ key, label }) => (
             <div key={key} className="grid grid-cols-2 items-center gap-4">
               <Label className="text-gray-500 dark:text-neutral-400 text-xs">{label}</Label>
