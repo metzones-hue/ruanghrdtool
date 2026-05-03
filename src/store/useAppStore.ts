@@ -768,11 +768,12 @@ const useAppStore = create<StoreState>()(
         const potonganTelat = totalMenitTelat * state.pengaturan.potonganTelat;
 
         const potonganKasbon = state.getSisaKasbonGaji(k.id);
-
+        const totalMenitTelat = absBulan.reduce((s, a) => s + (a.menitTelat || 0), 0);
+        const potonganTelat = k.divisi === 'HO' ? totalMenitTelat * state.pengaturan.potonganTelat : 0;
         const potonganDadakanGaji = state.getPotonganDadakanGaji(k.id, periode);
 
         const gajiPokokDisplay = k.divisi === 'HO' ? k.gajiPokok - uangMakan : k.gajiPokok;
-const total = gajiPokokDisplay + k.tunjangan + insentif + lembur - bpjs - potonganTelat - potonganKasbon - potonganDadakanGaji;
+        const total = gajiPokokDisplay + k.tunjangan + insentif + lembur - bpjs - potonganTelat - potonganKasbon - potonganDadakanGaji;
         
         return {
           gaji: k.gajiPokok,
