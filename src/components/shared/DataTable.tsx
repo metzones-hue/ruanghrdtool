@@ -35,7 +35,7 @@ export function DataTable<T extends { id: number }>({
 }: DataTableProps<T>) {
   const [search, setSearch] = useState('');
   const [currentPageSize, setCurrentPageSize] = useState(pageSize);
-
+  const [page, setPage] = useState(1);
   const filtered = search && searchFields.length > 0
     ? data.filter(item =>
         searchFields.some(field => {
