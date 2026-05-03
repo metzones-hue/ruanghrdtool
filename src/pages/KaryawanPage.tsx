@@ -282,13 +282,12 @@ export default function KaryawanPage() {
                 <Label className="text-gray-600 dark:text-neutral-300 text-xs">Tunjangan</Label>
                 <Input type="number" value={form.tunjangan} onChange={e => setForm({ ...form, tunjangan: +e.target.value })} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200" />
               </div>
-            <div className="grid grid-cols-2 gap-3">
-  <div className="space-y-1.5">
-    <Label className="text-gray-600 dark:text-neutral-300 text-xs">BPJS (nominal)</Label>
-    <Input type="number" value={form.bpjs} onChange={e => setForm({ ...form, bpjs: +e.target.value })} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200" />
-  </div>
-</div>
-            <div className="grid grid-cols-2 gap-3">
+           <div className="space-y-1.5">
+            <Label className="text-gray-600 dark:text-neutral-300 text-xs">BPJS (nominal)</Label>
+            <Input type="number" value={form.bpjs} onChange={e => setForm({ ...form, bpjs: +e.target.value })} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-gray-600 dark:text-neutral-300 text-xs">Upah Lembur/jam</Label>
                 <Input type="number" value={form.upahLembur} onChange={e => setForm({ ...form, upahLembur: +e.target.value })} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200" />
