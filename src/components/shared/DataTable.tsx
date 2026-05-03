@@ -130,11 +130,10 @@ export function DataTable<T extends { id: number }>({
         <ChevronRight className="w-4 h-4" />
       </Button>
     </div>
-  </div>
-    }
     </div>
-   );
+    )}
+    </div>
+     );
   }
-}
-
+  
 export default DataTable;
