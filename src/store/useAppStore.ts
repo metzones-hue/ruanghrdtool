@@ -774,7 +774,8 @@ const useAppStore = create<StoreState>()(
 
         const potonganDadakanGaji = state.getPotonganDadakanGaji(k.id, periode);
 
-        const total = k.gajiPokok + k.tunjangan + insentif + uangMakan + lembur - bpjs - potonganTelat - potonganKasbon - potonganDadakanGaji;
+        const gajiPokokDisplay = k.divisi === 'HO' ? k.gajiPokok - uangMakan : k.gajiPokok;
+const total = gajiPokokDisplay + k.tunjangan + insentif + uangMakan + lembur - bpjs - potonganTelat - potonganKasbon - potonganDadakanGaji;
 
         return {
           gaji: k.gajiPokok,
