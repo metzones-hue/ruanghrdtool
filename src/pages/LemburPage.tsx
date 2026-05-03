@@ -180,20 +180,34 @@ const toMin = (t: string) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Pending</p><p className="text-amber-500 text-xl font-bold">{totalPending}</p></CardContent></Card>
-        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Disetujui</p><p className="text-emerald-500 text-xl font-bold">{totalDisetujui}</p></CardContent></Card>
-        <Card className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800"><CardContent className="p-3"><p className="text-gray-400 dark:text-neutral-600 text-xs">Total Upah</p><p className="text-amber-500 text-xl font-bold">{fRp(totalUpah)}</p></CardContent></Card>
-      </div>
-      <div className="flex gap-2 items-center">
-      <Select value={bulan} onValueChange={setBulan}>
-        <SelectTrigger className="w-[220px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
-          {getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+  <div>
+    <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Lembur</h1>
+    <p className="text-gray-500 dark:text-neutral-400 text-sm">{totalPending} pending &middot; {totalDisetujui} disetujui</p>
+  </div>
+  <div className="flex flex-wrap items-center gap-2">
+    <Select value={bulan} onValueChange={setBulan}>
+      <SelectTrigger className="w-[160px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
+      <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}</SelectContent>
+    </Select>
+    <Select value={filterCabang} onValueChange={setFilterCabang}>
+      <SelectTrigger className="w-[140px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
+      <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">
+        <SelectItem value="all">Semua Cabang</SelectItem>
+        {Array.from(new Set(karyawan.filter(k => k.status === 'Aktif').map(k => k.divisi))).map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
       </SelectContent>
-      </Select>
+    </Select>
+    <Button variant="outline" onClick={recalculateFromAbsensi} className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-600 dark:text-neutral-300">
+      <Calculator className="w-4 h-4 mr-1" /> Auto-Detect
+    </Button>
+    <Button onClick={() => setOpenForm(true)} className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">
+      <Plus className="w-4 h-4 mr-1" /> Input Lembur
+    </Button>
+    <Button size="sm" onClick={() => { const pendingIds = filtered.filter(l => l.status === 'Pending').map(l => l.id); pendingIds.forEach(id => approveLembur(id, 'Disetujui')); toast.success(`${pendingIds.length} lembur disetujui`); }} className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold">
+      <Check className="w-4 h-4 mr-1" /> Approve Semua
+    </Button>
+  </div>
+</div>
 
       <Select value={filterCabang} onValueChange={setFilterCabang}>
   <SelectTrigger className="w-[150px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200">
