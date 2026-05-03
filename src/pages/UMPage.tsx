@@ -143,7 +143,7 @@ export default function UMPage() {
       <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getKamisList().map(p => <SelectItem key={p.value} value={p.value} className="text-gray-900 dark:text-neutral-200">{p.label}</SelectItem>)}</SelectContent>
     </Select>
   ) : (
-    <Select value={periodebulan} onValueChange={setPeriodeBulan}>
+    <Select value={periodeBulan} onValueChange={setPeriodeBulan}>
       <SelectTrigger className="w-[160px] bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800 text-gray-900 dark:text-neutral-200"><SelectValue /></SelectTrigger>
       <SelectContent className="bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-800">{getBulanOptions().map(b => <SelectItem key={b.value} value={b.value} className="text-gray-900 dark:text-neutral-200">{b.label}</SelectItem>)}</SelectContent>
     </Select>
