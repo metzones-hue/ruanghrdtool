@@ -431,30 +431,27 @@ const useAppStore = create<StoreState>()(
           status: 'Belum Dibayar' as const,
         };
       },
-      hitungSemuaGaji: (periode) => {
+     hitungSemuaGaji: (periode) => {
   const state = get();
   const aktif = state.karyawan.filter(k => k.status === 'Aktif');
-  const newGaji: GajiRecord[] = [];
-  aktif.forEach(k => {
+  const gajiLainnya = state.gaji.filter(g => g.periode !== periode);
+  const newGaji: GajiRecord[] = aktif.map((k, i) => {
     const ex = state.gaji.find(g => g.karyawanId === k.id && g.periode === periode);
-    if (!ex) {
-      const calc = state.hitungGajiKaryawan(k, periode);
-      newGaji.push({
-        id: nextId([...state.gaji, ...newGaji]),
-        karyawanId: k.id,
-        nama: k.nama,
-        periode,
-        ...calc,
-        status: 'Sudah Dibayar',
-      });
-    } else {
-      ex.status = 'Sudah Dibayar';
-    }
+    const calc = state.hitungGajiKaryawan(k, periode);
+    return {
+      id: ex?.id ?? nextId(gajiLainnya) + i,
+      karyawanId: k.id,
+      nama: k.nama,
+      periode,
+      ...calc,
+      status: ex?.status ?? 'Belum Dibayar',
+    };
   });
-  set({ gaji: [...state.gaji, ...newGaji] });
+  set({ gaji: [...gajiLainnya, ...newGaji] });
   get().addAuditLog({ user: state.userName || 'System', role: state.userRole || 'staff', aksi: 'CREATE', modul: 'Gaji', detail: `Hitung gaji periode ${periode} untuk ${aktif.length} karyawan` });
   get().addNotification({ judul: 'Penggajian Selesai', pesan: `Gaji periode ${periode} telah diproses`, type: 'success', modul: 'Gaji', link: '/gaji' });
 },
+
       },
       tandaiGajiBayar: (karyawanId, periode) => {
         const state = get();
