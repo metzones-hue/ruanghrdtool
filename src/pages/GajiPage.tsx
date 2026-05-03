@@ -24,12 +24,12 @@ export default function GajiPage() {
   const calculateGaji = () => { hitungSemuaGaji(periode); toast.success('Gaji dihitung untuk semua karyawan'); };
 
   const showSlip = (kId: number) => {
-    const k = aktif.find(x => x.id === kId);
-    if (!k) return;
-    const c = hitungGajiKaryawan(k, periode);
-    setSlipKaryawan({ k, calc: c });
-    setTimeout(() => handlePrintSlip(), 100);
-  };
+  const k = aktif.find(x => x.id === kId);
+  if (!k) return;
+  const c = hitungGajiKaryawan(k, periode);
+  setSlipKaryawan({ k, calc: c });
+  setTimeout(() => handlePrintSlip(), 500);
+};
 
   const totalGaji = gajiPeriode.reduce((s, g) => s + g.total, 0);
   const totalSudahBayar = gajiPeriode.filter(g => g.status === 'Sudah Dibayar').length;
