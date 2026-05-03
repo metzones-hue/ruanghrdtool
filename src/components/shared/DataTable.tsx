@@ -34,7 +34,7 @@ export function DataTable<T extends { id: number }>({
   emptyIcon,
 }: DataTableProps<T>) {
   const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
+  const [currentPageSize, setCurrentPageSize] = useState(pageSize);
 
   const filtered = search && searchFields.length > 0
     ? data.filter(item =>
@@ -45,10 +45,10 @@ export function DataTable<T extends { id: number }>({
       )
     : data;
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const start = (page - 1) * pageSize;
-  const paginated = filtered.slice(start, start + pageSize);
-
+  const totalPages = Math.max(1, Math.ceil(filtered.length / currentPageSize));
+  const start = (page - 1) * currentPageSize;
+  const paginated = filtered.slice(start, start + currentPageSize);
+  
   return (
     <div className="space-y-3">
       {searchFields.length > 0 && (
@@ -103,35 +103,35 @@ export function DataTable<T extends { id: number }>({
         </Table>
       </div>
 
-      {filtered.length > pageSize && (
-        <div className="flex items-center justify-between">
-          <p className="text-gray-400 dark:text-neutral-500 text-xs">
-            Menampilkan {start + 1}-{Math.min(start + pageSize, filtered.length)} dari {filtered.length}
-          </p>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:bg-neutral-800"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            <span className="text-gray-500 dark:text-neutral-400 text-xs px-2">
-              {page} / {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:bg-neutral-800"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
+    {filtered.length > 0 && (
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-2">
+      <p className="text-gray-400 dark:text-neutral-500 text-xs">
+        Menampilkan {start + 1}-{Math.min(start + currentPageSize, filtered.length)} dari {filtered.length}
+      </p>
+      <select
+        value={currentPageSize}
+        onChange={e => { setCurrentPageSize(+e.target.value); setPage(1); }}
+        className="text-xs bg-gray-100 dark:bg-neutral-900 border border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 rounded px-1 py-0.5"
+      >
+        <option value={10}>10</option>
+        <option value={25}>25</option>
+        <option value={50}>50</option>
+        <option value={100}>100</option>
+        <option value={99999}>Semua</option>
+      </select>
+    </div>
+    <div className="flex items-center gap-1">
+      <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:bg-neutral-800">
+        <ChevronLeft className="w-4 h-4" />
+      </Button>
+      <span className="text-gray-500 dark:text-neutral-400 text-xs px-2">{page} / {totalPages}</span>
+      <Button variant="outline" size="sm" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:bg-neutral-800">
+        <ChevronRight className="w-4 h-4" />
+      </Button>
+    </div>
+  </div>
+)}
       )}
     </div>
   );
