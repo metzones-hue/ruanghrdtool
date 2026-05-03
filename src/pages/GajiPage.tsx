@@ -31,13 +31,14 @@ export default function GajiPage() {
   setTimeout(() => handlePrintSlip(), 500);
 };
 
- const gajiFiltered = gajiPeriode.filter(g =>
-  filterCabang === 'Semua' ||
-  karyawan.find(k => k.id === g.karyawanId)?.divisi === filterCabang
-);
+const totalGaji = aktif.reduce((s, k) => {
+  const g = gajiPeriode.find(x => x.karyawanId === k.id);
+  return s + (g?.total || 0);
+}, 0);
 
-const totalGaji = gajiFiltered.reduce((s, g) => s + g.total, 0);
-const totalSudahBayar = gajiFiltered.filter(g => g.status === 'Sudah Dibayar').length;
+const totalSudahBayar = aktif.filter(k => 
+  gajiPeriode.find(g => g.karyawanId === k.id)?.status === 'Sudah Dibayar'
+).length;
   
   return (
     <div className="space-y-4">
