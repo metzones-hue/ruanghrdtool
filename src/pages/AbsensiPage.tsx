@@ -28,11 +28,11 @@ export default function AbsensiPage() {
 
   const aktif = karyawan.filter(k => k.status === 'Aktif');
   const filteredAbsensi = absensi.filter(a => {
-  if (!a.tanggal.startsWith(bulan)) return false;
-  if (filterCabang === 'all') return true;
-  const k = karyawan.find(k => k.id === a.karyawanId);
-  return k?.divisi === filterCabang;
-});
+    if (!a.tanggal.startsWith(bulan)) return false;
+    if (filterCabang === 'all') return true;
+    const k = karyawan.find(k => k.id === a.karyawanId);
+    return k?.divisi === filterCabang;
+  });
   const pg = pengaturan || defaultPengaturan;
 
   const handleSubmit = () => {
@@ -43,21 +43,19 @@ export default function AbsensiPage() {
     const k = karyawan.find(x => x.id === +form.karyawanId);
     if (!k) return;
 
-    // Auto shift detection
     const isShift2 = form.masuk ?
       (parseInt(form.masuk.split(':')[0]) * 60 + parseInt(form.masuk.split(':')[1])) >=
       (parseInt(pg.thresholdShift2.split(':')[0]) * 60 + parseInt(pg.thresholdShift2.split(':')[1]))
       : k.shift === 2;
 
-    // Auto telat calculation
     let menitTelat = 0;
     if (form.status === 'Hadir' && form.masuk) {
       const jamMasukMin = parseInt(form.masuk.split(':')[0]) * 60 + parseInt(form.masuk.split(':')[1]);
       const batasMin = isShift2
         ? parseInt(pg.batasTelatShift2.toString())
         : parseInt(pg.batasTelat.toString());
-      // Compare with shift start + tolerance
-      const jm1 = (pg.jamMasukShift1 || '08:30').split(':').map(Number); const jm2 = (pg.jamMasukShift2 || '12:00').split(':').map(Number);
+      const jm1 = (pg.jamMasukShift1 || '08:30').split(':').map(Number);
+      const jm2 = (pg.jamMasukShift2 || '12:00').split(':').map(Number);
       const shiftStartMin = isShift2 ? jm2[0]*60+jm2[1] : jm1[0]*60+jm1[1];
       const terlambat = jamMasukMin - shiftStartMin - batasMin;
       if (terlambat > 0) menitTelat = terlambat;
@@ -104,12 +102,8 @@ export default function AbsensiPage() {
           const keterangan = row['Keterangan'] || row['keterangan'] || '';
 
           const k = karyawan.find(x => x.nama.toLowerCase() === nama.toString().toLowerCase());
-          if (!k || !tgl) {
-            failed++;
-            return;
-          }
+          if (!k || !tgl) { failed++; return; }
 
-          // Auto shift
           const isShift2 = masuk ?
             (parseInt(masuk.split(':')[0]) * 60 + parseInt(masuk.split(':')[1])) >=
             (parseInt(pg.thresholdShift2.split(':')[0]) * 60 + parseInt(pg.thresholdShift2.split(':')[1]))
@@ -123,24 +117,22 @@ export default function AbsensiPage() {
             masuk: masuk || undefined,
             keluar: keluar || undefined,
             menitTelat: (() => {
-  if (status !== 'Hadir' || !masuk) return 0;
-  const jamMasukMin = parseInt(masuk.split(':')[0]) * 60 + parseInt(masuk.split(':')[1]);
-  const jm1 = (pg.jamMasukShift1 || '08:30').split(':').map(Number);
-  const jm2 = (pg.jamMasukShift2 || '12:00').split(':').map(Number);
-  const shiftStartMin = isShift2 ? jm2[0]*60+jm2[1] : jm1[0]*60+jm1[1];
-  const batasMin = isShift2 ? parseInt(pg.batasTelatShift2.toString()) : parseInt(pg.batasTelat.toString());
-  const terlambat = jamMasukMin - shiftStartMin - batasMin;
-  return Math.min(Math.max(terlambat, 0), 40);
-})(),
+              if (status !== 'Hadir' || !masuk) return 0;
+              const jamMasukMin = parseInt(masuk.split(':')[0]) * 60 + parseInt(masuk.split(':')[1]);
+              const jm1 = (pg.jamMasukShift1 || '08:30').split(':').map(Number);
+              const jm2 = (pg.jamMasukShift2 || '12:00').split(':').map(Number);
+              const shiftStartMin = isShift2 ? jm2[0]*60+jm2[1] : jm1[0]*60+jm1[1];
+              const batasMin = isShift2 ? parseInt(pg.batasTelatShift2.toString()) : parseInt(pg.batasTelat.toString());
+              const terlambat = jamMasukMin - shiftStartMin - batasMin;
+              return Math.min(Math.max(terlambat, 0), 40);
+            })(),
             shift: isShift2 ? 2 : 1,
             keterangan: keterangan || undefined,
           });
           success++;
         });
 
-        if (imported.length > 0) {
-          importAbsensi(imported);
-        }
+        if (imported.length > 0) importAbsensi(imported);
         toast.success(`Import selesai: ${success} sukses, ${failed} gagal`);
         if (fileInputRef.current) fileInputRef.current.value = '';
       } catch {
@@ -200,30 +192,10 @@ export default function AbsensiPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Absensi</h1>
-          <p className="text-gray-500 dark:text-neutral-400 text-sm">Data absensi karyawan</p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:bg-neutral-800"
-          >
-            <Upload className="w-4 h-4 mr-1" /> Import Excel
-          </Button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".xlsx,.xls"
-            onChange={handleImportExcel}
-            className="hidden"
-          />
-          <Button onClick={() => setOpenForm(true)} className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
-            <Plus className="w-4 h-4 mr-1" /> Input Absensi
-          </Button>
-        </div>
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-neutral-100">Absensi</h1>
+        <p className="text-gray-500 dark:text-neutral-400 text-sm">Data absensi karyawan</p>
       </div>
 
       {/* Summary Cards */}
@@ -244,10 +216,10 @@ export default function AbsensiPage() {
         ))}
       </div>
 
-      {/* Filter Bulan */}
-      <div className="flex gap-2">
+      {/* Filter + Actions — satu baris */}
+      <div className="flex flex-wrap items-center gap-2">
         <Select value={bulan} onValueChange={setBulan}>
-          <SelectTrigger className="w-[200px] bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200">
+          <SelectTrigger className="w-[160px] bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700">
@@ -255,7 +227,7 @@ export default function AbsensiPage() {
               <SelectItem key={b.value} value={b.value} className="text-gray-800 dark:text-neutral-200">{b.label}</SelectItem>
             ))}
           </SelectContent>
-       </Select>
+        </Select>
         <Select value={filterCabang} onValueChange={setFilterCabang}>
           <SelectTrigger className="w-[150px] bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-800 dark:text-neutral-200">
             <SelectValue placeholder="Semua Cabang" />
@@ -267,6 +239,15 @@ export default function AbsensiPage() {
             ))}
           </SelectContent>
         </Select>
+        <div className="ml-auto flex gap-2">
+          <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-800">
+            <Upload className="w-4 h-4 mr-1" /> Import Excel
+          </Button>
+          <input ref={fileInputRef} type="file" accept=".xlsx,.xls" onChange={handleImportExcel} className="hidden" />
+          <Button onClick={() => setOpenForm(true)} className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
+            <Plus className="w-4 h-4 mr-1" /> Input Absensi
+          </Button>
+        </div>
       </div>
 
       {/* Table */}
@@ -345,7 +326,7 @@ export default function AbsensiPage() {
                 <Button onClick={handleSubmit} className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
                   Simpan
                 </Button>
-                <Button variant="outline" onClick={() => setOpenForm(false)} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:bg-neutral-800">
+                <Button variant="outline" onClick={() => setOpenForm(false)} className="bg-gray-100 dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-800">
                   Batal
                 </Button>
               </div>
