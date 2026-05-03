@@ -67,7 +67,7 @@ export const SlipGaji = forwardRef<HTMLDivElement, SlipGajiProps>(
                 <td className="py-2 text-right font-medium">{fRp(calc.insentif)}</td>
               </tr>
             )}
-            {calc.uangMakan > 0 && (
+            {calc.uangMakan > 0 && karyawan.umMode !== 'bulanan' && (
               <tr className="border-b border-gray-200">
                 <td className="py-2 text-emerald-600 font-medium">Uang Makan</td>
                 <td className="py-2 text-right font-medium">{fRp(calc.uangMakan)}</td>
