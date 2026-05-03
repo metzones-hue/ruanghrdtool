@@ -100,7 +100,7 @@ export default function GajiPage() {
                   <tr key={k.id} className="border-b border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-900/50">
                     <td className="py-2 px-2"><p className="text-gray-800 dark:text-neutral-200 text-sm font-medium">{k.nama}</p></td>
                     <td className="py-2 px-2"><span className="px-2 py-0.5 rounded-md bg-gray-200 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400 text-xs">{k.divisi}</span></td>
-                    <td className="py-2 px-2 text-right text-gray-600 dark:text-neutral-400 text-sm">{fRp((g?.gaji || k.gajiPokok) - (k.divisi === 'HO' ? (g?.uangMakan || 0) : 0))}}</td>
+                    <td className="py-2 px-2 text-right text-gray-600 dark:text-neutral-400 text-sm">{fRp((g?.gaji ?? k.gajiPokok) - (k.divisi === 'HO' ? (g?.uangMakan ?? 0) : 0))}</td>
                     <td className="py-2 px-2 text-right text-gray-600 dark:text-neutral-400 text-sm">{fRp(g?.tunjangan || k.tunjangan)}</td>
                     <td className="py-2 px-2 text-right text-emerald-500 text-sm">{g?.insentif ? fRp(g.insentif) : '-'}</td>
                     <td className="py-2 px-2 text-right text-gray-600 dark:text-neutral-400 text-sm">{fRp(g?.uangMakan || 0)}</td>
